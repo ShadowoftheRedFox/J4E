@@ -14,7 +14,10 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
         <!-- Entities mapping -->
-        <mapping resource="model/profile.hbm.xml" />
-        <mapping resource="model/etudiant.hbm.xml" />
+        <mapping resource="model/user.hbm.xml" />
+        <mapping resource="model/department.hbm.xml" />
+        <mapping resource="model/payslip.hbm.xml" />
+        <mapping resource="model/project.hbm.xml" />
+        <mapping resource="model/permission.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

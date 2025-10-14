@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="fr.cyu.jee.beans.Payslip" table="payslip">
+        <id name="id" type="integer" column="id">
+            <generator class="native"/>
+        </id>
+        
+        <property name="userId" column="user_id" type="int" not-null="true"/>
+        <property name="hour" column="hour" type="float" not-null="true"/>
+        <property name="wage" column="wage" type="float" not-null="true"/>
+        <property name="bonus" column="bonus" type="float" not-null="true"/>
+        <property name="malus" column="malus" type="float" not-null="true"/>
+        <property name="date" column="date" type="timestamp" not-null="true"/>
+
+    </class>
+</hibernate-mapping>
