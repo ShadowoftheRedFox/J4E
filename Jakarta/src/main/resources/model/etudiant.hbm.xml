@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="fr.cyu.td6.beans.Etudiant" table="etudiants">
+        <id name="id" type="integer" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="nom" column="nom" type="string" not-null="true"/>
+        <property name="prenom" column="prenom" type="string" not-null="true"/>
+        <property name="age" column="age" type="integer" not-null="true"/>
+    </class>
+</hibernate-mapping>
