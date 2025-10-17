@@ -1,12 +1,19 @@
 <?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
-        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="fr.cyu.jee.beans.User" table="user">
         <id name="id" type="integer" column="id">
-            <generator class="native"/>
+            <generator class="native" />
         </id>
-        <property name="firstName" column="first_name" type="string" not-null="true"/>
-        <property name="lastName" column="last_name" type="string" not-null="true"/>
+        <property name="firstName" column="first_name" type="string" not-null="true" />
+        <property name="lastName" column="last_name" type="string" not-null="true" />
+        <set name="permissions" table="user_permission">
+            <key column="user_id" not-null="true" />
+            <element column="permission_id">
+                <type name="org.hibernate.type.EnumType">
+                    <param name="enumClass">fr.cyu.jee.beans.enums.Permission</param>
+                </type>
+            </element>
+        </set>
     </class>
 </hibernate-mapping>

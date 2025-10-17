@@ -19,7 +19,7 @@ public class Payslip {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "userid", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "hour")

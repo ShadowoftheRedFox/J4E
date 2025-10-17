@@ -1,6 +1,10 @@
 package fr.cyu.jee.beans;
 
 import java.beans.JavaBean;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import fr.cyu.jee.beans.enums.Status;
 import jakarta.persistence.Column;
@@ -8,6 +12,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @JavaBean
@@ -25,6 +32,10 @@ public class Project {
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 
+    @ManyToMany
+    @JoinTable(name = "user_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private HashSet<User> users = new HashSet<>();
+
     public int getId() {
         return id;
     }
@@ -37,7 +48,8 @@ public class Project {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) throws NullPointerException {
+        Objects.requireNonNull(name);
         this.name = name;
     }
 
@@ -45,8 +57,28 @@ public class Project {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Status status) throws NullPointerException {
+        Objects.requireNonNull(status);
         this.status = status;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Collection<User> users) throws NullPointerException {
+        Objects.requireNonNull(users);
+        this.users = new HashSet<User>(users);
+    }
+
+    public boolean addMembers(User user) throws NullPointerException {
+        Objects.requireNonNull(user);
+        return users.add(user);
+    }
+
+    public boolean removeMembers(User user) throws NullPointerException {
+        Objects.requireNonNull(user);
+        return users.remove(user);
     }
 
     @Override

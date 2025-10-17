@@ -1,7 +1,11 @@
 package fr.cyu.jee.beans;
 
 import java.beans.JavaBean;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import fr.cyu.jee.beans.enums.Permission;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,6 +24,8 @@ public class User {
 
     @Column(name = "last_name")
     private String lastName;
+
+    private HashSet<Permission> permissions = new HashSet<>();
 
     public int getId() {
         return id;
@@ -43,6 +49,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Set<Permission> getPermissions() {
+        return this.permissions;
+    }
+
+    public void setPermissions(Collection<Permission> permissions) {
+        this.permissions = new HashSet<Permission>(permissions);
     }
 
     @Override
