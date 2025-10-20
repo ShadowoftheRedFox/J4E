@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 
 @JavaBean
 @Entity
-@Table(name = "project")
+@Table(name = "Project")
 public class Project {
 
     @Id

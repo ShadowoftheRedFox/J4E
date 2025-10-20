@@ -1,12 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="fr.cyu.jee.beans.User" table="user">
+    <class name="fr.cyu.jee.beans.User" table="users">
         <id name="id" type="integer" column="id">
             <generator class="native" />
         </id>
         <property name="firstName" column="first_name" type="string" not-null="true" />
         <property name="lastName" column="last_name" type="string" not-null="true" />
+        <property name="password" column="password" type="string" not-null="true" />
+        <set name="ranks" table="user_rank">
+            <key column="user_id" not-null="true" />
+            <element column="rank_id">
+                <type name="org.hibernate.type.EnumType">
+                    <param name="enumClass">fr.cyu.jee.beans.enums.Rank</param>
+                </type>
+            </element>
+        </set>
         <set name="permissions" table="user_permission">
             <key column="user_id" not-null="true" />
             <element column="permission_id">
@@ -15,5 +24,7 @@
                 </type>
             </element>
         </set>
+        <many-to-one name="department" class="fr.cyu.jee.beans.Department" column="department_id"
+            not-null="true" />
     </class>
 </hibernate-mapping>

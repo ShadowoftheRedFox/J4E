@@ -8,7 +8,7 @@
         <property name="name" column="name" type="string" not-null="true" />
         <property name="status" column="status" not-null="true">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">fr.cyu.jee.enums.Status</param>
+                <param name="enumClass">fr.cyu.jee.beans.enums.Status</param>
             </type>
         </property>
         <set name="users" table="user_project" cascade="all">

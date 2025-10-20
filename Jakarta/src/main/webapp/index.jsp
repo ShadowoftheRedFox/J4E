@@ -1,14 +1,17 @@
+<%@ page import="java.util.List" %>
+<%@ page import="fr.cyu.jee.beans.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <html>
+<html>
 
-    <head>
-        <title>Index</title>
-    </head>
+<head>
+    <title>Index</title>
+    <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" type="text/css">
+</head>
 
-    <body>
-        <jsp:include page="/components/header.jsp" />
-        <p>Ploof</p>
-        <jsp:include page="/components/footer.jsp" />
-    </body>
+<body>
+    <jsp:include page="/components/header.jsp" />
+    <p>Index</p>
+    <jsp:include page="/components/footer.jsp" />
+</body>
 
-    </html>
+</html>

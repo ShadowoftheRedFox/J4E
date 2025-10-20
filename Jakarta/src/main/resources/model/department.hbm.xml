@@ -7,5 +7,9 @@
             <generator class="native"/>
         </id>
         <property name="name" column="name" type="string" not-null="true"/>
+        <set name="users" inverse="true" cascade="all">
+            <key column="department_id"/>
+            <one-to-many class="fr.cyu.jee.beans.User"/>
+        </set>
     </class>
 </hibernate-mapping>

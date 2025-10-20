@@ -2,6 +2,7 @@ package fr.cyu.jee.beans;
 
 import java.beans.JavaBean;
 import java.sql.Date;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +13,7 @@ import jakarta.persistence.Table;
 
 @JavaBean
 @Entity
-@Table(name = "payslip")
+@Table(name = "Payslip")
 public class Payslip {
 
     @Id
@@ -22,19 +23,19 @@ public class Payslip {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "hour")
+    @Column(name = "hour", nullable = false)
     private float hour;
 
-    @Column(name = "wage")
+    @Column(name = "wage", nullable = false)
     private float wage;
 
-    @Column(name = "bonus")
+    @Column(name = "bonus", nullable = false)
     private float bonus;
 
-    @Column(name = "malus")
+    @Column(name = "malus", nullable = false)
     private float malus;
 
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private Date date;
 
     public int getId() {
@@ -49,7 +50,8 @@ public class Payslip {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(User user) throws NullPointerException {
+        Objects.requireNonNull(user);
         this.user = user;
     }
 
@@ -89,7 +91,12 @@ public class Payslip {
         return date;
     }
 
-    public void setDate(Date date) {
+    public float getTotal() {
+        return wage * hour + bonus - malus;
+    }
+
+    public void setDate(Date date) throws NullPointerException {
+        Objects.requireNonNull(date);
         this.date = date;
     }
 
