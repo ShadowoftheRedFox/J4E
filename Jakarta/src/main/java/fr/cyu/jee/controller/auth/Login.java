@@ -19,20 +19,14 @@ import fr.cyu.jee.dao.UserDAO;
 
 @WebServlet("/auth/login")
 public class Login extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
-    public Login() {
-        super();
-    }
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
      *      response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getWriter().append("Served at: ").append(request.getContextPath());
+        req.getRequestDispatcher("/auth/login.jsp").forward(req, resp);
     }
 
     /**
@@ -40,42 +34,23 @@ public class Login extends HttpServlet {
      *      response)
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Integer loginUsername = Integer.parseInt(req.getParameter("username")); // le username est l'id
+        // TODO try catch parseint
+        Integer loginId = Integer.parseInt(req.getParameter("identifier")); // le username est l'id
         String loginPassword = req.getParameter("password");
+
         UserDAO userDao = new UserDAO();
+        User user = userDao.get(loginId);
 
-        Map<String, Object> usersInDb = new HashMap<>();
-        Collection<User> users = userDao.find(usersInDb);
-        User userInDb = isUsernameInDatabase(loginUsername, users);
-
-        if (validatePassword(loginPassword, userInDb.getPassword())) {
+        if (user != null && user.getPassword().equals(loginPassword)) {
             // Successful login: store user info in session and redirect to home/dashboard
             HttpSession session = req.getSession(true);
-            session.setAttribute("user", loginUsername);
+            session.setAttribute("user", loginId);
             // Redirect to application root (adjust destination as needed)
             resp.sendRedirect(req.getContextPath() + "/");
         } else {
             // Authentication failed: forward back to login with an error message
             req.setAttribute("error", "Invalid username or password.");
-            RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/views/auth/login.jsp");
-            rd.forward(req, resp);
+            req.getRequestDispatcher("/auth/login.jsp").forward(req, resp);
         }
-    }
-
-    // Function that searches for a username in a collection by comparing the
-    // username entered during login with those stored in the database.
-    private User isUsernameInDatabase(int LoginUsername, Collection<User> users) {
-        for (User u : users) {
-            if (u.getId() == LoginUsername) {
-                return u;
-            }
-        }
-        return null;
-    }
-
-    // Compare the passwords entered during login with those stored in the
-    // database
-    private boolean validatePassword(String password, String passwordInDb) {
-        return passwordInDb.equals(password);
     }
 }

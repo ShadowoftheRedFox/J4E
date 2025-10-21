@@ -1,5 +1,3 @@
-<%@ page import="java.util.List" %>
-<%@ page import="fr.cyu.jee.beans.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 

@@ -1,4 +1,3 @@
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 
@@ -13,7 +12,7 @@
     <form>
         <form method="post" action="${pageContext.request.contextPath}/auth/login">
             <label for="identifier">Identifiant</label>
-            <input id="identifier" name="identifier" type="text" required>
+            <input id="identifier" name="identifier" type="number" required>
             <label for="password">Mot de passe</label>
             <input id="passwordr" name="password" type="password" required>
             <button type="submit">Se connecter</button>

@@ -2,13 +2,13 @@
 <html>
 
 <head>
-    <title>Rapport</title>
+    <title>Feuilles de paies</title>
     <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <jsp:include page="/components/header.jsp" />
-    <h1>Rapport</h1>
+    <h1>Feuilles de paies</h1>
     <jsp:include page="/components/footer.jsp" />
 </body>
 

@@ -1,4 +1,4 @@
-package fr.cyu.jee.controller.employee;
+package fr.cyu.jee.controller.department;
 
 import jakarta.servlet.ServletException;
 
