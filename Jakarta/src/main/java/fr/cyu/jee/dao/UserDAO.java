@@ -1,30 +1,42 @@
 package fr.cyu.jee.dao;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+import org.hibernate.query.SelectionQuery;
+import org.hibernate.query.sqm.UnknownEntityException;
+
 import fr.cyu.jee.beans.User;
 import fr.cyu.jee.HibernateUtil;
 import fr.cyu.jee.HibernateUtil.SessionWrapper;
 
 public class UserDAO implements DAO<User> {
     @Override
-    public User get(int id) {
-        // TODO Auto-generated method stub
-        return null;
+    public User get(final int id) {
+        User user = HibernateUtil.useSession(new SessionWrapper<User>() {
+            @Override
+            public User use(Transaction trs, Session session) {
+                SelectionQuery<User> q = session.createSelectionQuery("from User U where U.id = :id;", User.class);
+                q.setParameter("id", id);
+                return q.getSingleResultOrNull();
+            }
+        });
+        return user;
     }
 
     @Override
-    public void create(User user) {
-        HibernateUtil.persist(user);
+    public void create(final User user) {
+        HibernateUtil.save(user);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(final int id) {
         HibernateUtil.remove(id, User.class);
     }
 
@@ -38,14 +50,52 @@ public class UserDAO implements DAO<User> {
     }
 
     @Override
-    public void edit(int id) {
-        // TODO Auto-generated method stub
+    public void edit(final User u) {
+        HibernateUtil.update(u);
     }
 
     @Override
-    public Collection<User> find(Map<String, Object> filter) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<User> find(final Map<String, Object> filter) {
+        // https://docs.hibernate.org/orm/3.3/reference/fr-FR/html/queryhql.html
+        List<User> users = HibernateUtil.useSession(new SessionWrapper<List<User>>() {
+            @Override
+            public List<User> use(Transaction trs, Session session) {
+                String sql = "from User U where 1=1 ";
+                if (filter.containsKey("first_name")) {
+                    sql += "and U.first_name like '*:first_name*' ";
+                }
+                if (filter.containsKey("last_name")) {
+                    sql += "and U.last_name like '*:last_name*' ";
+                }
+                // TODO check if it works with sets...
+                if (filter.containsKey("rank")) {
+                    sql += "and U.rank = :rank ";
+                }
+                if (filter.containsKey("permission")) {
+                    sql += "and U.role = :role ";
+                }
+                sql += ";";
+
+                SelectionQuery<User> q = session.createSelectionQuery(sql, User.class);
+
+                if (filter.containsKey("first_name")) {
+                    q.setParameter("first_name", filter.get("first_name"));
+                }
+                if (filter.containsKey("last_name")) {
+                    q.setParameter("last_name", filter.get("last_name"));
+                }
+                if (filter.containsKey("rank")) {
+                    q.setParameter("rank", filter.get("rank"));
+                }
+                if (filter.containsKey("permission")) {
+                    q.setParameter("role", filter.get("role"));
+                }
+
+                return q.getResultList();
+            }
+        });
+
+        return users;
     }
 
 }

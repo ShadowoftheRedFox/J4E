@@ -20,7 +20,7 @@ public class ProjectDAO implements DAO<Project> {
 
     @Override
     public void create(Project project) {
-        HibernateUtil.persist(project);
+        HibernateUtil.save(project);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ProjectDAO implements DAO<Project> {
     }
 
     @Override
-    public void edit(int id) {
+    public void edit(final Project p) {
         // TODO Auto-generated method stub
     }
 

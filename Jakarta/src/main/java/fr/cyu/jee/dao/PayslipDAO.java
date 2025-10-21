@@ -37,11 +37,11 @@ public class PayslipDAO implements DAO<Payslip> {
 
     @Override
     public void create(Payslip payslip) {
-        HibernateUtil.persist(payslip);
+        HibernateUtil.save(payslip);
     }
 
     @Override
-    public void edit(int id) {
+    public void edit(final Payslip p) {
         // TODO Auto-generated method stub
     }
 

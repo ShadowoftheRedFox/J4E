@@ -6,7 +6,7 @@ import java.util.Map;
 public interface DAO<T> {
     public void create(T o);
 
-    public void edit(int id);
+    public void edit(T value);
 
     public T get(int id);
 

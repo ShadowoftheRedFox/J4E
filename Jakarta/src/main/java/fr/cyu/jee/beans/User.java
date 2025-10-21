@@ -42,6 +42,12 @@ public class User {
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
+    public User(String firstName, String lastName, int matricule, String department) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.id = matricule;
+    }
+
     public int getId() {
         return id;
     }
@@ -81,9 +87,31 @@ public class User {
         return department;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) throws NullPointerException {
+        Objects.requireNonNull(password);
+        this.password = password;
+    }
+
     public void setDepartment(Department department) throws NullPointerException {
         Objects.requireNonNull(department);
         this.department = department;
+    }
+
+    public boolean isSame(User u) {
+        if (u == null) {
+            return false;
+        }
+
+        return u.firstName == firstName &&
+                u.lastName == lastName &&
+                u.department.equals(department) &&
+                u.permissions.equals(permissions) &&
+                u.ranks.equals(ranks) &&
+                u.password == password;
     }
 
     @Override

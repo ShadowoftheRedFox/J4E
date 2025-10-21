@@ -34,6 +34,10 @@ public class Department {
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     private HashSet<User> users = new HashSet<>();
 
+    public Department(String name) {
+        this.name = name;
+    }
+
     public void setId(int id) {
         this.id = id;
     }

@@ -37,44 +37,59 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-    public interface SessionWrapper {
-        public void use(Transaction trs, Session session);
+    public interface SessionWrapper<T> {
+        public T use(Transaction trs, Session session);
 
-        default public void except(Transaction trs, Throwable e) {
+        default public T except(Transaction trs, Throwable e) {
             trs.rollback();
             e.printStackTrace();
+            return null;
         }
     }
 
-    public static boolean useSession(SessionWrapper swf) {
+    public static <T> T useSession(SessionWrapper<T> swf) {
         Transaction trs = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             trs = session.beginTransaction();
-            swf.use(trs, session);
+            T res = swf.use(trs, session);
             trs.commit();
-            return true;
+            return res;
         } catch (Exception e) {
             swf.except(trs, e);
-            return false;
+            return null;
         }
     }
 
-    public static boolean persist(Object o) {
-        return HibernateUtil.useSession(new SessionWrapper() {
+    public static boolean update(Object o) {
+        return HibernateUtil.useSession(new SessionWrapper<Boolean>() {
             @Override
-            public void use(Transaction trs, Session session) {
+            public Boolean use(Transaction trs, Session session) {
+                session.merge(o);
+                return true;
+            }
+        });
+    }
+
+    public static boolean save(Object o) {
+        return HibernateUtil.useSession(new SessionWrapper<Boolean>() {
+            @Override
+            public Boolean use(Transaction trs, Session session) {
                 session.persist(o);
+                return true;
             }
         });
     }
 
     public static <T> boolean remove(Object id, Class<T> c) {
-        return HibernateUtil.useSession(new SessionWrapper() {
+        return HibernateUtil.useSession(new SessionWrapper<Boolean>() {
             @Override
-            public void use(Transaction trs, Session session) {
+            public Boolean use(Transaction trs, Session session) {
                 T p = session.get(c, id);
                 if (p != null) {
                     session.remove(p);
+                    return true;
+                } else {
+                    return false;
                 }
             }
         });

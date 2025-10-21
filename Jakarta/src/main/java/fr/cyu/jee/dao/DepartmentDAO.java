@@ -22,7 +22,7 @@ public class DepartmentDAO implements DAO<Department> {
 
     @Override
     public void create(Department department) {
-        HibernateUtil.persist(department);
+        HibernateUtil.save(department);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class DepartmentDAO implements DAO<Department> {
     }
 
     @Override
-    public void edit(int id) {
+    public void edit(final Department d) {
         // TODO Auto-generated method stub
     }
 
