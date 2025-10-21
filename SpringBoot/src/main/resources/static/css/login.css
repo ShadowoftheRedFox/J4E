@@ -1,0 +1,59 @@
+body {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    width: 100vw;
+    height: 100vh;
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+#forms {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: stretch;
+    width: 100%;
+}
+
+form {
+    display: flex;
+    flex-basis: 0;
+    border: solid 1px #2b2b2c;
+    border-radius: 5px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem;
+}
+
+form > .form_title {
+    text-align: center;
+    font-size: 18px;
+}
+
+fieldset {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 1rem;
+    column-gap: 1rem;
+}
+
+fieldset > label {
+    grid-column: 1;
+    width: 10rem;
+}
+
+fieldset input {
+    height: 1.5rem;
+    width: 20rem;
+}
+
+fieldset > div {
+    grid-column: 2;
+}
