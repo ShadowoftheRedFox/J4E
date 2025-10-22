@@ -16,13 +16,13 @@ public class DepartmentDAO implements DAO<Department> {
     }
 
     @Override
-    public void create(Department department) {
-        HibernateUtil.save(department);
+    public boolean create(Department department) {
+        return HibernateUtil.save(department);
     }
 
     @Override
-    public void delete(int id) {
-        HibernateUtil.remove(id, Department.class);
+    public boolean delete(int id) {
+        return HibernateUtil.remove(id, Department.class);
     }
 
     @Override
@@ -35,8 +35,9 @@ public class DepartmentDAO implements DAO<Department> {
     }
 
     @Override
-    public void edit(final Department d) {
+    public boolean edit(final Department d) {
         // TODO Auto-generated method stub
+        return false;
     }
 
     @Override

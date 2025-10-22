@@ -16,13 +16,13 @@ import fr.cyu.jee.beans.UserSession;
 public class UserSessionDAO implements DAO<UserSession> {
 
     @Override
-    public void create(UserSession o) {
-        HibernateUtil.save(o);
+    public boolean create(UserSession o) {
+        return HibernateUtil.save(o);
     }
 
     @Override
-    public void delete(int id) {
-        HibernateUtil.remove(id, UserSession.class);
+    public boolean delete(int id) {
+        return HibernateUtil.remove(id, UserSession.class);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class UserSessionDAO implements DAO<UserSession> {
         UserSession session = HibernateUtil.useSession(new SessionWrapper<UserSession>() {
             @Override
             public UserSession use(Transaction trs, Session session) {
-                SelectionQuery<UserSession> q = session.createSelectionQuery("from UserSession US where US.id = :id;",
+                SelectionQuery<UserSession> q = session.createSelectionQuery("from UserSession US where US.id = :id",
                         UserSession.class);
                 q.setParameter("id", id);
                 return q.getSingleResultOrNull();
@@ -53,7 +53,7 @@ public class UserSessionDAO implements DAO<UserSession> {
             @Override
             public UserSession use(Transaction trs, Session session) {
                 SelectionQuery<UserSession> q = session.createSelectionQuery(
-                        "from UserSession US where US.user_id = :uid;",
+                        "from UserSession US where US.user.id = :uid",
                         UserSession.class);
                 q.setParameter("uid", user_id);
                 return q.getSingleResultOrNull();
@@ -67,7 +67,7 @@ public class UserSessionDAO implements DAO<UserSession> {
             @Override
             public UserSession use(Transaction trs, Session session) {
                 SelectionQuery<UserSession> q = session.createSelectionQuery(
-                        "from UserSession US where US.token = :token;",
+                        "from UserSession US where US.token = :token",
                         UserSession.class);
                 q.setParameter("token", token);
                 return q.getSingleResultOrNull();
@@ -82,7 +82,7 @@ public class UserSessionDAO implements DAO<UserSession> {
     }
 
     @Override
-    public void edit(UserSession value) {
+    public boolean edit(UserSession value) {
         throw new UnsupportedOperationException();
     }
 }

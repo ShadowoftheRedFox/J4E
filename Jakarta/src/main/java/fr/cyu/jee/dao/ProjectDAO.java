@@ -16,13 +16,13 @@ public class ProjectDAO implements DAO<Project> {
     }
 
     @Override
-    public void create(Project project) {
-        HibernateUtil.save(project);
+    public boolean create(Project project) {
+        return HibernateUtil.save(project);
     }
 
     @Override
-    public void delete(int id) {
-        HibernateUtil.remove(id, Project.class);
+    public boolean delete(int id) {
+        return HibernateUtil.remove(id, Project.class);
     }
 
     @Override
@@ -35,8 +35,9 @@ public class ProjectDAO implements DAO<Project> {
     }
 
     @Override
-    public void edit(final Project p) {
+    public boolean edit(final Project p) {
         // TODO Auto-generated method stub
+        return false;
     }
 
     @Override

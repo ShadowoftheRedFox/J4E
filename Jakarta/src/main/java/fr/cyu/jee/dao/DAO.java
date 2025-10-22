@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.Map;
 
 public interface DAO<T> {
-    public void create(T o);
+    public boolean create(T o);
 
-    public void edit(T value);
+    public boolean edit(T value);
 
     public T get(int id);
 
-    public void delete(int id);
+    public boolean delete(int id);
 
     public Collection<T> getAll();
 

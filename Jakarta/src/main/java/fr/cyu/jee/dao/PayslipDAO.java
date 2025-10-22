@@ -10,8 +10,8 @@ import fr.cyu.jee.beans.Payslip;
 
 public class PayslipDAO implements DAO<Payslip> {
     @Override
-    public void delete(int id) {
-        HibernateUtil.remove(id, Payslip.class);
+    public boolean delete(int id) {
+        return HibernateUtil.remove(id, Payslip.class);
     }
 
     @Override
@@ -30,13 +30,14 @@ public class PayslipDAO implements DAO<Payslip> {
     }
 
     @Override
-    public void create(Payslip payslip) {
-        HibernateUtil.save(payslip);
+    public boolean create(Payslip payslip) {
+        return HibernateUtil.save(payslip);
     }
 
     @Override
-    public void edit(final Payslip p) {
+    public boolean edit(final Payslip p) {
         // TODO Auto-generated method stub
+        return false;
     }
 
     @Override

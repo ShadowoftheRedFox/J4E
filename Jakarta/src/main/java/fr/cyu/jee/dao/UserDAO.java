@@ -18,7 +18,7 @@ public class UserDAO implements DAO<User> {
         User user = HibernateUtil.useSession(new SessionWrapper<User>() {
             @Override
             public User use(Transaction trs, Session session) {
-                SelectionQuery<User> q = session.createSelectionQuery("from User U where U.id = :id;", User.class);
+                SelectionQuery<User> q = session.createSelectionQuery("from User U where U.id = :id", User.class);
                 q.setParameter("id", id);
                 return q.getSingleResultOrNull();
             }
@@ -27,13 +27,13 @@ public class UserDAO implements DAO<User> {
     }
 
     @Override
-    public void create(final User user) {
-        HibernateUtil.save(user);
+    public boolean create(final User user) {
+        return HibernateUtil.save(user);
     }
 
     @Override
-    public void delete(final int id) {
-        HibernateUtil.remove(id, User.class);
+    public boolean delete(final int id) {
+        return HibernateUtil.remove(id, User.class);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class UserDAO implements DAO<User> {
     }
 
     @Override
-    public void edit(final User u) {
-        HibernateUtil.update(u);
+    public boolean edit(final User u) {
+        return HibernateUtil.update(u);
     }
 
     @Override
