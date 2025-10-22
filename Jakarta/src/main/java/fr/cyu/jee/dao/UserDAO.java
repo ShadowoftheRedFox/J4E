@@ -1,20 +1,16 @@
 package fr.cyu.jee.dao;
 
 import java.util.List;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.hibernate.query.SelectionQuery;
-import org.hibernate.query.sqm.UnknownEntityException;
 
-import fr.cyu.jee.beans.User;
 import fr.cyu.jee.HibernateUtil;
 import fr.cyu.jee.HibernateUtil.SessionWrapper;
+import fr.cyu.jee.beans.User;
 
 public class UserDAO implements DAO<User> {
     @Override

@@ -29,7 +29,7 @@ public class Project {
     private String name;
 
     @Column(name = "status")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @ManyToMany

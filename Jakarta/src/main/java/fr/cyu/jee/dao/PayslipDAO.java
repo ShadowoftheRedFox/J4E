@@ -1,18 +1,12 @@
 package fr.cyu.jee.dao;
 
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import fr.cyu.jee.beans.Payslip;
-import fr.cyu.jee.beans.Project;
-import fr.cyu.jee.beans.User;
 import fr.cyu.jee.HibernateUtil;
+import fr.cyu.jee.beans.Payslip;
 
 public class PayslipDAO implements DAO<Payslip> {
     @Override

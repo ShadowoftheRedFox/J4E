@@ -1,16 +1,14 @@
 package fr.cyu.jee.controller.employee;
 
-import jakarta.servlet.ServletException;
+import java.io.IOException;
 
+import fr.cyu.jee.beans.User;
+import fr.cyu.jee.dao.UserDAO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import fr.cyu.jee.dao.UserDAO;
-import fr.cyu.jee.beans.User;
 
 @WebServlet("/UserController")
 public class UserController extends HttpServlet {
@@ -59,7 +57,12 @@ public class UserController extends HttpServlet {
             request.getRequestDispatcher("employee.jsp").forward(request, response);
             return;
         }
-        User user = new User(name, firstName, Integer.parseInt(matricule), department);
+
+        // FIXME
+        // User user = new User(name, firstName, Integer.parseInt(matricule),
+        // department);
+        User user = new User();
+
         try {
             // Sauvegarde en base
             // userDao.create(user);

@@ -6,11 +6,7 @@
             <generator class="native" />
         </id>
         <property name="name" column="name" type="string" not-null="true" />
-        <property name="status" column="status" not-null="true">
-            <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">fr.cyu.jee.beans.enums.Status</param>
-            </type>
-        </property>
+        <property name="status" column="status" not-null="true" type="fr.cyu.jee.beans.enums.Status" />
         <set name="users" table="user_project" cascade="all">
             <key column="project_id" />
             <many-to-many class="fr.cyu.jee.beans.User" column="user_id" />

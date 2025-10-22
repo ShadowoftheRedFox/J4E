@@ -1,16 +1,14 @@
 package fr.cyu.jee.controller.department;
 
-import jakarta.servlet.ServletException;
+import java.io.IOException;
 
+import fr.cyu.jee.beans.Department;
+import fr.cyu.jee.dao.DepartmentDAO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import fr.cyu.jee.dao.DepartmentDAO;
-import fr.cyu.jee.beans.Department;
 
 @WebServlet("/DepartmentController")
 public class DepartmentController extends HttpServlet {

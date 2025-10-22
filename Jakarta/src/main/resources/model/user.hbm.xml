@@ -10,21 +10,13 @@
         <property name="password" column="password" type="string" not-null="true" />
         <set name="ranks" table="user_rank">
             <key column="user_id" not-null="true" />
-            <element column="rank_id">
-                <type name="org.hibernate.type.EnumType">
-                    <param name="enumClass">fr.cyu.jee.beans.enums.Rank</param>
-                </type>
-            </element>
+            <element column="rank_value" type="fr.cyu.jee.beans.enums.Rank" />
         </set>
-        <set name="permissions" table="user_permission">
+        <set name="permissions" table="user_permission" lazy="true">
             <key column="user_id" not-null="true" />
-            <element column="permission_id">
-                <type name="org.hibernate.type.EnumType">
-                    <param name="enumClass">fr.cyu.jee.beans.enums.Permission</param>
-                </type>
-            </element>
+            <element column="permission_value" type="fr.cyu.jee.beans.enums.Permission" />
         </set>
-        <many-to-one name="department" class="fr.cyu.jee.beans.Department" column="department_id"
-            not-null="true" />
+<!--        <many-to-one name="department" class="fr.cyu.jee.beans.Department" column="department_id"-->
+<!--            not-null="false" />-->
     </class>
 </hibernate-mapping>

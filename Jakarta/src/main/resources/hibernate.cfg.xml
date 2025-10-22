@@ -11,10 +11,13 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
+        <!-- Because old technology, and not yet migrated -->
+<!--        <property name="hibernate.transform_hbm_xml.enabled">true</property>-->
         <!-- Entities mapping -->
         <mapping resource="model/department.hbm.xml" />
         <mapping resource="model/payslip.hbm.xml" />
         <mapping resource="model/project.hbm.xml" />
         <mapping resource="model/user.hbm.xml" />
+        <mapping resource="model/user_session.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

@@ -2,7 +2,6 @@ package fr.cyu.jee;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,10 +9,6 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-
-import fr.cyu.jee.beans.Department;
-import fr.cyu.jee.beans.Project;
-import fr.cyu.jee.beans.User;
 
 public class HibernateUtil {
     private static final SessionFactory sessionFactory;
@@ -41,8 +36,10 @@ public class HibernateUtil {
         public T use(Transaction trs, Session session);
 
         default public T except(Transaction trs, Throwable e) {
-            trs.rollback();
             e.printStackTrace();
+            if (trs != null && trs.isActive()) {
+                trs.rollback();
+            }
             return null;
         }
     }
@@ -61,30 +58,32 @@ public class HibernateUtil {
     }
 
     public static boolean update(Object o) {
-        return HibernateUtil.useSession(new SessionWrapper<Boolean>() {
+        Boolean res = HibernateUtil.useSession(new SessionWrapper<Boolean>() {
             @Override
             public Boolean use(Transaction trs, Session session) {
                 session.merge(o);
                 return true;
             }
         });
+        return res != null ? res : false;
     }
 
     public static boolean save(Object o) {
-        return HibernateUtil.useSession(new SessionWrapper<Boolean>() {
+        Boolean res = HibernateUtil.useSession(new SessionWrapper<Boolean>() {
             @Override
             public Boolean use(Transaction trs, Session session) {
                 session.persist(o);
                 return true;
             }
         });
+        return res != null ? res : false;
     }
 
     public static <T> boolean remove(Object id, Class<T> c) {
-        return HibernateUtil.useSession(new SessionWrapper<Boolean>() {
+        Boolean res = HibernateUtil.useSession(new SessionWrapper<Boolean>() {
             @Override
             public Boolean use(Transaction trs, Session session) {
-                T p = session.get(c, id);
+                T p = session.find(c, id);
                 if (p != null) {
                     session.remove(p);
                     return true;
@@ -93,6 +92,7 @@ public class HibernateUtil {
                 }
             }
         });
+        return res != null ? res : false;
     }
 
     public static <T> Optional<List<T>> list(String name, Class<T> c) {

@@ -5,7 +5,7 @@ body {
     color: black;
     min-height: 100dvh;
     max-width: 100dvw;
-    overflow: hidden;
+    overflow-x: hidden;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     scroll-behavior: smooth;
 }
@@ -18,6 +18,7 @@ header {
     justify-content: start;
     z-index: 1;
     margin-inline: 1em;
+    backdrop-filter: blur(10px);
 
     >* {
         margin-inline: 0.5em;
@@ -25,14 +26,13 @@ header {
 }
 
 footer {
-    position: absolute;
-    bottom: 0;
+    background-color: white;
 }
 
 .main {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    margin: 2em;
 }
 
 section {
@@ -52,6 +52,10 @@ form {
     label {
         margin: 0 1em;
     }
+}
+
+table {
+    width: 100%;
 }
 
 select,

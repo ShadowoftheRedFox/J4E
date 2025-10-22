@@ -1,51 +1,57 @@
 package fr.cyu.jee.beans;
 
-import java.beans.JavaBean;
-import java.security.Permission;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import fr.cyu.jee.beans.enums.Permission;
 import fr.cyu.jee.beans.enums.Rank;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
+import jakarta.validation.constraints.NotNull;
 
-@JavaBean
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 public class User {
 
     @Id
+    @GeneratedValue
     private int id;
 
-    @Column(name = "first_name", nullable = false)
+    @NotNull
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @NotNull
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "password", nullable = false)
+    @NotNull
+    @Column(name = "password")
     private String password;
 
     private HashSet<Rank> ranks = new HashSet<>();
 
     private HashSet<Permission> permissions = new HashSet<>();
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+//    @NotNull
+//    @ManyToOne(optional = true)
+//    @JoinColumn(name = "department_id")
+//    private Department department;
 
-    public User(String firstName, String lastName, int matricule, String department) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.id = matricule;
+    public User() {
+        // hibernate will use this one, don't remove it
+    }
+
+    public User(String firstName, String lastName, String password) {
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPassword(password);
     }
 
     public int getId() {
@@ -83,10 +89,24 @@ public class User {
         this.ranks = new HashSet<Rank>(ranks);
     }
 
-    public Department getDepartment() {
-        return department;
+    public Set<Permission> getPermissions() {
+        return this.permissions;
     }
 
+    public void setPermissions(Set<Permission> permissions) throws NullPointerException {
+        Objects.requireNonNull(permissions);
+        this.permissions = new HashSet<Permission>(permissions);
+    }
+
+//    public Department getDepartment() {
+//        return department;
+//    }
+//
+//    public void setDepartment(Department department) throws NullPointerException {
+////        Objects.requireNonNull(department);
+//        this.department = department;
+//    }
+    
     public String getPassword() {
         return password;
     }
@@ -96,22 +116,17 @@ public class User {
         this.password = password;
     }
 
-    public void setDepartment(Department department) throws NullPointerException {
-        Objects.requireNonNull(department);
-        this.department = department;
-    }
-
     public boolean isSame(User u) {
         if (u == null) {
             return false;
         }
 
         return u.firstName == firstName &&
-                u.lastName == lastName &&
-                u.department.equals(department) &&
-                u.permissions.equals(permissions) &&
-                u.ranks.equals(ranks) &&
-                u.password == password;
+            u.lastName == lastName &&
+//            u.department.equals(department) &&
+             u.permissions.equals(permissions) &&
+             u.ranks.equals(ranks) &&
+            u.password == password;
     }
 
     @Override
