@@ -1,22 +1,23 @@
 package fr.cyu.jee.beans;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import fr.cyu.jee.beans.enums.Permission;
 import fr.cyu.jee.beans.enums.Rank;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -35,23 +36,26 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    private HashSet<Rank> ranks = new HashSet<>();
+    private Set<Rank> ranks;
 
-    private HashSet<Permission> permissions = new HashSet<>();
+    private Set<Permission> permissions;
 
-//    @NotNull
-//    @ManyToOne(optional = true)
-//    @JoinColumn(name = "department_id")
-//    private Department department;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Payslip> payslips;
+
+    @NotNull
+    @ManyToOne(optional = false, targetEntity = Department.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Department department;
 
     public User() {
         // hibernate will use this one, don't remove it
     }
 
-    public User(String firstName, String lastName, String password) {
+    public User(String firstName, String lastName, String password, Department department) {
         setFirstName(firstName);
         setLastName(lastName);
         setPassword(password);
+        setDepartment(department);
     }
 
     public int getId() {
@@ -86,7 +90,7 @@ public class User {
 
     public void setRanks(Set<Rank> ranks) throws NullPointerException {
         Objects.requireNonNull(ranks);
-        this.ranks = new HashSet<Rank>(ranks);
+        this.ranks = ranks;
     }
 
     public Set<Permission> getPermissions() {
@@ -95,18 +99,27 @@ public class User {
 
     public void setPermissions(Set<Permission> permissions) throws NullPointerException {
         Objects.requireNonNull(permissions);
-        this.permissions = new HashSet<Permission>(permissions);
+        this.permissions = permissions;
     }
 
-//    public Department getDepartment() {
-//        return department;
-//    }
-//
-//    public void setDepartment(Department department) throws NullPointerException {
-////        Objects.requireNonNull(department);
-//        this.department = department;
-//    }
-    
+    public Set<Payslip> getPayslips() {
+        return payslips;
+    }
+
+    public void setPayslips(Set<Payslip> payslips) {
+        Objects.requireNonNull(payslips);
+        this.payslips = payslips;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) throws NullPointerException {
+        // Objects.requireNonNull(department);
+        this.department = department;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -122,11 +135,11 @@ public class User {
         }
 
         return u.firstName == firstName &&
-            u.lastName == lastName &&
-//            u.department.equals(department) &&
-             u.permissions.equals(permissions) &&
-             u.ranks.equals(ranks) &&
-            u.password == password;
+                u.lastName == lastName &&
+                u.department.equals(department) &&
+                u.permissions.equals(permissions) &&
+                u.ranks.equals(ranks) &&
+                u.password == password;
     }
 
     @Override

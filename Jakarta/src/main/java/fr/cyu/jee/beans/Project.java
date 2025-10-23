@@ -1,8 +1,6 @@
 package fr.cyu.jee.beans;
 
 import java.beans.JavaBean;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,7 +17,7 @@ import jakarta.persistence.Table;
 
 @JavaBean
 @Entity
-@Table(name = "Project")
+@Table(name = "project")
 public class Project {
 
     @Id
@@ -34,7 +32,7 @@ public class Project {
 
     @ManyToMany
     @JoinTable(name = "user_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private HashSet<User> users = new HashSet<>();
+    private Set<User> users;
 
     public int getId() {
         return id;
@@ -66,9 +64,9 @@ public class Project {
         return users;
     }
 
-    public void setUsers(Collection<User> users) throws NullPointerException {
+    public void setUsers(Set<User> users) throws NullPointerException {
         Objects.requireNonNull(users);
-        this.users = new HashSet<User>(users);
+        this.users = users;
     }
 
     public boolean addMembers(User user) throws NullPointerException {

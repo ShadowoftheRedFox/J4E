@@ -11,6 +11,8 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
+        <property name="current_session_context_class">thread</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <!-- Because old technology, and not yet migrated -->
 <!--        <property name="hibernate.transform_hbm_xml.enabled">true</property>-->
         <!-- Entities mapping -->

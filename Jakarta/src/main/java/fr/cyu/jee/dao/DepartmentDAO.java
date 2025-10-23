@@ -5,14 +5,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.SelectionQuery;
+
 import fr.cyu.jee.HibernateUtil;
+import fr.cyu.jee.HibernateUtil.SessionWrapper;
 import fr.cyu.jee.beans.Department;
 
 public class DepartmentDAO implements DAO<Department> {
     @Override
     public Department get(int id) {
-        // TODO Auto-generated method stub
-        return null;
+        Department department = HibernateUtil.useSession(new SessionWrapper<Department>() {
+            @Override
+            public Department use(Transaction trs, Session session) {
+                SelectionQuery<Department> q = session.createSelectionQuery("from Department D where D.id = :id",
+                        Department.class);
+                q.setParameter("id", id);
+                return q.getSingleResultOrNull();
+            }
+        });
+        return department;
     }
 
     @Override
@@ -36,8 +49,7 @@ public class DepartmentDAO implements DAO<Department> {
 
     @Override
     public boolean edit(final Department d) {
-        // TODO Auto-generated method stub
-        return false;
+        return HibernateUtil.update(d);
     }
 
     @Override

@@ -1,9 +1,8 @@
 package fr.cyu.jee.beans;
 
 import java.beans.JavaBean;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -28,10 +27,11 @@ public class Department {
     }
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-    private HashSet<User> users = new HashSet<>();
+    private Set<User> users;
 
-    public Department() {}
-    
+    public Department() {
+    }
+
     public Department(String name) {
         this.name = name;
     }
@@ -52,16 +52,16 @@ public class Department {
     /**
      * @return the users
      */
-    public HashSet<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
     /**
      * @param users the users to set
      */
-    public void setUsers(Collection<User> users) throws NullPointerException {
+    public void setUsers(Set<User> users) throws NullPointerException {
         Objects.requireNonNull(users);
-        this.users = new HashSet<User>(users);
+        this.users = users;
     }
 
     @Override

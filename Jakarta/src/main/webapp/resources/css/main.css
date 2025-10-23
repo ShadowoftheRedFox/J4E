@@ -54,8 +54,31 @@ form {
     }
 }
 
+.inline-form {
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+td form {
+    display: block;
+
+    input {
+        display: none;
+    }
+}
+
 table {
     width: 100%;
+}
+
+.action-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    >* {
+        margin: 0;
+    }
 }
 
 select,

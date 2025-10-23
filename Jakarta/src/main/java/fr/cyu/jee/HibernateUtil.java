@@ -50,6 +50,7 @@ public class HibernateUtil {
             trs = session.beginTransaction();
             T res = swf.use(trs, session);
             trs.commit();
+            session.close();
             return res;
         } catch (Exception e) {
             swf.except(trs, e);
@@ -100,7 +101,8 @@ public class HibernateUtil {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             res = Optional.of(session.createQuery("from " + name, c).list());
         } catch (Exception e) {
-            res = Optional.empty();
+            throw new Error(e);
+            // res = Optional.empty();
         }
 
         return res;

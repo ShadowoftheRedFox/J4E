@@ -5,7 +5,7 @@
         <id name="id" type="integer" column="id">
             <generator class="native" />
         </id>
-        <one-to-one name="user" class="fr.cyu.jee.beans.User" column="user" not-null="true" />
+        <many-to-one name="user" class="fr.cyu.jee.beans.User" column="user_id" not-null="true" />
         <property name="hour" column="hour" type="float" not-null="true" />
         <property name="wage" column="wage" type="float" not-null="true" />
         <property name="bonus" column="bonus" type="float" not-null="true" />
