@@ -10,7 +10,7 @@
         <property name="password" column="password" type="string" not-null="true" />
         <set name="ranks" table="user_rank" lazy="false">
             <key column="user_id" not-null="true" />
-            <element column="rank_value" type="fr.cyu.jee.beans.enums.Rank" />
+            <element column="rank_value" type="String" />
         </set>
         <set name="permissions" table="user_permission" cascade="all">
             <key column="user_id" not-null="true" />
