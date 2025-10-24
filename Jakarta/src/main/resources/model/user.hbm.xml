@@ -17,7 +17,7 @@
             <element column="permission_value" type="string" not-null="true" />
         </set>
         <set name="payslips" table="payslip" inverse="true" cascade="all">
-            <key column="user_id" />
+            <key column="user_id" not-null="true" />
             <one-to-many class="fr.cyu.jee.beans.Payslip" />
         </set>
         <many-to-one name="department" class="fr.cyu.jee.beans.Department" column="department_id"

@@ -71,6 +71,10 @@ td form {
 
 table {
     width: 100%;
+    
+    td {
+        max-width: 500px;
+    }
 }
 
 .action-menu {

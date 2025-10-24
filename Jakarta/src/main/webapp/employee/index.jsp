@@ -41,7 +41,7 @@
                 %>
                 <div>
                     <input type="checkbox" id="<%= p.name()%>" name="<%= p.name()%>"> 
-                    <label for="<%= p.name()%>"><%= p.name() %></label>
+                    <label for="<%= p.name()%>"><%= p.getPermission() %></label>
                 </div>
                 <%
                     }
@@ -53,7 +53,7 @@
                 %>
                 <div>
                     <input type="checkbox" id="<%= r.name()%>" name="<%= r.name()%>">
-                    <label for="<%= r.name()%>"><%= r.name() %></label>
+                    <label for="<%= r.name()%>"><%= r.getRank() %></label>
                 </div>
                 <%
                 }

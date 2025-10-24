@@ -7,8 +7,9 @@ import fr.cyu.jee.dao.DepartmentDAO;
 import fr.cyu.jee.dao.UserDAO;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import org.hibernate.Hibernate;
 
-public class HibernateSetup implements ServletContextListener {
+public class HibernateSetup implements ServletContextListener {    
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContextListener.super.contextInitialized(sce);

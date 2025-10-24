@@ -16,6 +16,8 @@
             <label for="password">Mot de passe</label>
             <input id="passwordr" name="password" type="password" required>
             <button type="submit">Se connecter</button>
+            <label style="color: red">${pageContext.request.getAttribute("error") == null ? "" :
+                pageContext.request.getAttribute("error")}</label>
         </form>
     </form>
     <jsp:include page="/components/footer.jsp" />
