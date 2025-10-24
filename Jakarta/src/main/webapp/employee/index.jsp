@@ -9,25 +9,6 @@
 <head>
     <title>Employés</title>
     <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" type="text/css">
-    <style>
-        .scroll-menu {
-            display: flex;
-            flex-direction: column;
-            max-height: 50px;
-            overflow: auto;
-            
-            >div {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: nowrap;
-                align-items: baseline;
-                
-                label {
-                    margin: 0;
-                }
-            }
-        }
-    </style>
 </head>
 
 <body>

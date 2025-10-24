@@ -1,11 +1,14 @@
 package fr.cyu.jee.controller.employee;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import fr.cyu.jee.HibernateUtil;
 import fr.cyu.jee.beans.Department;
 import fr.cyu.jee.beans.User;
+import fr.cyu.jee.beans.enums.Permission;
+import fr.cyu.jee.beans.enums.Rank;
 import fr.cyu.jee.dao.DepartmentDAO;
 import fr.cyu.jee.dao.UserDAO;
 import jakarta.servlet.ServletException;
@@ -99,7 +102,28 @@ public class Edit extends HttpServlet {
         user.setPassword(password);
         user.setDepartment(d);
 
+        // update each permission
+        Collection<String> up = user.getPermissions();
+        for (Permission p : Permission.values()) {
+            if ("on".equals(req.getParameter(p.name()))) {
+                up.add(p.name());
+            } else {
+                up.remove(p.name());
+            }
+        }
+
+        // update each rank
+        Collection<String> ur = user.getRanks();
+        for (Rank r : Rank.values()) {
+            if ("on".equals(req.getParameter(r.name()))) {
+                ur.add(r.name());
+            } else {
+                ur.remove(r.name());
+            }
+        }
+
         HibernateUtil.update(user);
+
         resp.sendRedirect(req.getContextPath() + "/employee");
     }
 }

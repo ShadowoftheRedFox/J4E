@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
-        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="fr.cyu.jee.beans.Department" table="department">
         <id name="id" type="integer" column="id">
-            <generator class="native"/>
+            <generator class="native" />
         </id>
-        <property name="name" column="name" type="string" not-null="true"/>
+        <property name="name" column="name" type="string" unique="true" not-null="true" />
         <set name="users" inverse="true" cascade="all">
-            <key column="department_id"/>
-            <one-to-many class="fr.cyu.jee.beans.User"/>
+            <key column="department_id" />
+            <one-to-many class="fr.cyu.jee.beans.User" />
         </set>
     </class>
 </hibernate-mapping>

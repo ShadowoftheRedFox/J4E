@@ -83,6 +83,24 @@ table {
     }
 }
 
+.scroll-menu {
+    display: flex;
+    flex-direction: column;
+    max-height: 50px;
+    overflow: auto;
+
+    >div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: baseline;
+
+        label {
+            margin: 0;
+        }
+    }
+}
+
 select,
 input,
 button,

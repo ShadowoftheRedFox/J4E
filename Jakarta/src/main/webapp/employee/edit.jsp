@@ -1,6 +1,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="fr.cyu.jee.beans.User" %>
 <%@ page import="fr.cyu.jee.beans.Department" %>
+<%@ page import="fr.cyu.jee.beans.enums.Permission" %>
+<%@ page import="fr.cyu.jee.beans.enums.Rank" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 
@@ -46,7 +48,30 @@
                 <% }
                 } %>
             </select>
-            <%-- TODO permissions and ranks --%>
+            <div class="scroll-menu">
+                <%
+                    for (Permission p : Permission.values()) {
+                %>
+                <div>
+                    <input type="checkbox" id="<%= p.name()%>" name="<%= p.name()%>" <%= u.getPermissions().contains(p.name()) ? "checked" : ""%>>
+                    <label for="<%= p.name()%>"><%= p.name() %></label>
+                </div>
+                <%
+                    }
+                %>
+            </div>
+            <div class="scroll-menu">
+                <%
+                    for (Rank r : Rank.values()) {
+                %>
+                <div>
+                    <input type="checkbox" id="<%= r.name()%>" name="<%= r.name()%>" <%= u.getRanks().contains(r.name()) ? "checked" : ""%>>
+                    <label for="<%= r.name()%>"><%= r.name() %></label>
+                </div>
+                <%
+                    }
+                %>
+            </div>
             <button type="submit">Modifier</button>
             <label style="color: red">${pageContext.request.getAttribute("error") == null ? "" :
                 pageContext.request.getAttribute("error")}</label>
