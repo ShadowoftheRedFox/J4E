@@ -1,12 +1,33 @@
 <%@ page import="java.util.List" %>
 <%@ page import="fr.cyu.jee.beans.User" %>
 <%@ page import="fr.cyu.jee.beans.Department" %>
+<%@ page import="fr.cyu.jee.beans.enums.Permission" %>
+<%@ page import="fr.cyu.jee.beans.enums.Rank" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 
 <head>
     <title>Employés</title>
     <link href="${pageContext.request.contextPath}/resources/css/main.css" rel="stylesheet" type="text/css">
+    <style>
+        .scroll-menu {
+            display: flex;
+            flex-direction: column;
+            max-height: 50px;
+            overflow: auto;
+            
+            >div {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: baseline;
+                
+                label {
+                    margin: 0;
+                }
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -33,6 +54,30 @@
                 <% }
                 } %>
             </select>
+            <div class="scroll-menu">
+                <%
+                    for (Permission p : Permission.values()) {
+                %>
+                <div>
+                    <input type="checkbox" id="<%= p.name()%>" name="<%= p.name()%>"> 
+                    <label for="<%= p.name()%>"><%= p.name() %></label>
+                </div>
+                <%
+                    }
+                %>
+            </div>
+            <div class="scroll-menu">
+                <%
+                for (Rank r : Rank.values()) {
+                %>
+                <div>
+                    <input type="checkbox" id="<%= r.name()%>" name="<%= r.name()%>">
+                    <label for="<%= r.name()%>"><%= r.name() %></label>
+                </div>
+                <%
+                }
+                %>
+            </div>
             <button type="submit">Ajouter</button>
             <label style="color: red">${pageContext.request.getAttribute("error") == null ? "" :
                 pageContext.request.getAttribute("error")}</label>
@@ -50,6 +95,8 @@
                 <th scope="col">Prénom</th>
                 <th scope="col">Nom</th>
                 <th scope="col">Département</th>
+                <th scope="col">Permission(s)</th>
+                <th scope="col">Rôle(s)</th>
                 <th scope="col">Actions</th>
             </tr>
             </thead>
@@ -70,6 +117,12 @@
                 </td>
                 <td>
                     <%= u.getDepartment() != null ? u.getDepartment().getName() : "Aucun" %>
+                </td>
+                <td>
+                    <%= u.getPermissions().isEmpty() ? "Aucune" : u.getPermissions().toString() %>
+                </td>
+                <td>
+                    <%= u.getRanks().isEmpty() ? "Aucun" : u.getRanks().toString() %>
                 </td>
                 <td>
                     <div class="action-menu">

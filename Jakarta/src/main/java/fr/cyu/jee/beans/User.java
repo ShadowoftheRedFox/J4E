@@ -1,5 +1,6 @@
 package fr.cyu.jee.beans;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -7,10 +8,15 @@ import fr.cyu.jee.beans.enums.Permission;
 import fr.cyu.jee.beans.enums.Rank;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -36,12 +42,19 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    private Set<Rank> ranks;
+    @ElementCollection(targetClass = Rank.class)
+    @JoinTable(name = "user_rank", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<String> ranks = new HashSet<>();
 
-    private Set<Permission> permissions;
+    @ElementCollection(targetClass = Permission.class)
+    @JoinTable(name = "user_permission", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<String> permissions = new HashSet<>();
 
+    @NotNull
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<Payslip> payslips;
+    private Set<Payslip> payslips = new HashSet<>();
 
     @NotNull
     @ManyToOne(optional = false, targetEntity = Department.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -84,21 +97,19 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Set<Rank> getRanks() {
+    public Set<String> getRanks() {
         return this.ranks;
     }
 
-    public void setRanks(Set<Rank> ranks) throws NullPointerException {
-        Objects.requireNonNull(ranks);
+    public void setRanks(Set<String> ranks) {
         this.ranks = ranks;
     }
 
-    public Set<Permission> getPermissions() {
+    public Set<String> getPermissions() {
         return this.permissions;
     }
 
-    public void setPermissions(Set<Permission> permissions) throws NullPointerException {
-        Objects.requireNonNull(permissions);
+    public void setPermissions(Set<String> permissions) {
         this.permissions = permissions;
     }
 
@@ -107,7 +118,6 @@ public class User {
     }
 
     public void setPayslips(Set<Payslip> payslips) {
-        Objects.requireNonNull(payslips);
         this.payslips = payslips;
     }
 

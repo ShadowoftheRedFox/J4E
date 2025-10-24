@@ -12,9 +12,10 @@
             <key column="user_id" not-null="true" />
             <element column="rank_value" type="fr.cyu.jee.beans.enums.Rank" />
         </set>
-        <set name="permissions" table="user_permission" lazy="false">
+        <set name="permissions" table="user_permission" cascade="all">
             <key column="user_id" not-null="true" />
-            <element column="permission_value" type="fr.cyu.jee.beans.enums.Permission" />
+            <element type="string" column="permission_value"
+                not-null="true" />
         </set>
         <set name="payslips" table="payslip" inverse="true" cascade="all">
             <key column="user_id" />

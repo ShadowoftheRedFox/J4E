@@ -53,8 +53,9 @@ public class HibernateUtil {
             session.close();
             return res;
         } catch (Exception e) {
-            swf.except(trs, e);
-            return null;
+            throw new RuntimeException(e);
+//            swf.except(trs, e);
+//            return null;
         }
     }
 

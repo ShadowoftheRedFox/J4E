@@ -1,9 +1,7 @@
 package fr.cyu.jee.controller.department;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import fr.cyu.jee.HibernateUtil;
 import fr.cyu.jee.beans.Department;
@@ -19,7 +17,7 @@ public class Index extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         DepartmentDAO ddao = new DepartmentDAO();
-        
+
         List<Department> departments = ddao.getAll();
 
         req.setAttribute("departments", departments);
