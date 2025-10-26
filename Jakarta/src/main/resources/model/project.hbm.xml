@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="fr.cyu.jee.beans.Project" table="project">
         <id name="id" type="integer" column="id">
-            <generator class="native" />
+            <generator class="native"/>
         </id>
-        <property name="name" column="name" type="string" not-null="true" />
-        <property name="status" column="status" not-null="true" type="fr.cyu.jee.beans.enums.Status" />
+        <property name="name" column="name" type="string" not-null="true"/>
+        <property name="status" column="status" not-null="true" type="fr.cyu.jee.beans.enums.Status"/>
         <set name="users" table="user_project" cascade="all">
-            <key column="project_id" />
-            <many-to-many class="fr.cyu.jee.beans.User" column="user_id" />
+            <key column="project_id"/>
+            <many-to-many class="fr.cyu.jee.beans.User" column="user_id"/>
         </set>
     </class>
 </hibernate-mapping>

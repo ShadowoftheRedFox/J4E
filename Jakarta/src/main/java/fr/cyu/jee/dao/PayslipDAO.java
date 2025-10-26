@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import fr.cyu.jee.HibernateUtil;
+import fr.cyu.jee.beans.Department;
 import fr.cyu.jee.beans.Payslip;
 
 public class PayslipDAO implements DAO<Payslip> {
@@ -25,8 +26,8 @@ public class PayslipDAO implements DAO<Payslip> {
 
     @Override
     public Payslip get(int id) {
-        // TODO Auto-generated method stub
-        return null;
+        return HibernateUtil.get(Payslip.class, id);
+
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import fr.cyu.jee.beans.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.SelectionQuery;
@@ -16,16 +17,7 @@ import fr.cyu.jee.beans.Department;
 public class DepartmentDAO implements DAO<Department> {
     @Override
     public Department get(int id) {
-        Department department = HibernateUtil.useSession(new SessionWrapper<Department>() {
-            @Override
-            public Department use(Transaction trs, Session session) {
-                SelectionQuery<Department> q = session.createSelectionQuery("from Department D where D.id = :id",
-                        Department.class);
-                q.setParameter("id", id);
-                return q.getSingleResultOrNull();
-            }
-        });
-        return department;
+       return HibernateUtil.get(Department.class, id);
     }
 
     @Override

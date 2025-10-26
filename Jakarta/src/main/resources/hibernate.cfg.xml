@@ -20,6 +20,5 @@
         <mapping resource="model/payslip.hbm.xml" />
         <mapping resource="model/project.hbm.xml" />
         <mapping resource="model/user.hbm.xml" />
-        <mapping resource="model/user_session.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

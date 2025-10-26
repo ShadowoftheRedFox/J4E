@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import jakarta.annotation.Nullable;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.SelectionQuery;
@@ -15,15 +16,7 @@ import fr.cyu.jee.beans.User;
 public class UserDAO implements DAO<User> {
     @Override
     public User get(final int id) {
-        User user = HibernateUtil.useSession(new SessionWrapper<User>() {
-            @Override
-            public User use(Transaction trs, Session session) {
-                SelectionQuery<User> q = session.createSelectionQuery("from User U where U.id = :id", User.class);
-                q.setParameter("id", id);
-                return q.getSingleResultOrNull();
-            }
-        });
-        return user;
+        return HibernateUtil.get(User.class, id);
     }
 
     @Override
@@ -36,13 +29,12 @@ public class UserDAO implements DAO<User> {
         Boolean res = HibernateUtil.useSession(new SessionWrapper<Boolean>() {
             @Override
             public Boolean use(Transaction trs, Session session) {
-                User user = session.find(User.class, id);
+                User user = get(id);
                 if (user != null) {
-                     
-                    session.createNativeMutationQuery("DELETE FROM user_project WHERE user_id = :userId")
-                           .setParameter("userId", id)
-                           .executeUpdate();
-                    
+                    session.createNativeMutationQuery("DELETE FROM user_project WHERE user_id = :userId ")
+                        .setParameter("userId", id)
+                        .executeUpdate();
+
                     session.remove(user);
                     return true;
                 } else {
@@ -50,7 +42,7 @@ public class UserDAO implements DAO<User> {
                 }
             }
         });
-        
+
         if (res != null) {
             return res;
         } else {

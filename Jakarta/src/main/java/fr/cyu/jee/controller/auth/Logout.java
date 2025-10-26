@@ -2,6 +2,7 @@ package fr.cyu.jee.controller.auth;
 
 import java.io.IOException;
 
+import fr.cyu.jee.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,11 +27,7 @@ public class Logout extends HttpServlet {
      *      response)
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        if (session != null) {
-            session.invalidate();
-        }
-
+        SessionUtil.removeSession(req, resp);
         resp.sendRedirect(req.getContextPath() + "/");
     }
 }

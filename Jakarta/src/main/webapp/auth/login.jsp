@@ -11,10 +11,10 @@
     <h1>Connexion</h1>
     <form>
         <form method="post" action="${pageContext.request.contextPath}/auth/login">
-            <label for="identifier">Identifiant</label>
-            <input id="identifier" name="identifier" type="number" required>
+            <label for="login">Identifiant</label>
+            <input id="login" name="login" type="number" required>
             <label for="password">Mot de passe</label>
-            <input id="passwordr" name="password" type="password" required>
+            <input id="password" name="password" type="password" required>
             <button type="submit">Se connecter</button>
             <label style="color: red">${pageContext.request.getAttribute("error") == null ? "" :
                 pageContext.request.getAttribute("error")}</label>

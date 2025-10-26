@@ -1,3 +1,4 @@
+<%@ page import="fr.cyu.jee.SessionUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <header id="header">
@@ -11,18 +12,8 @@
     <a href="${pageContext.request.contextPath}/report">Rapport</a>
     <a href="${pageContext.request.contextPath}/payslip">Fiches de paies</a>
     <%
-        boolean isConnected = false;
-        Object strId = request.getSession().getAttribute("user");
-        if (strId != null) {
-            isConnected = true;
-        }
-
-        for (Cookie c : request.getCookies()) {
-            if (c.getName() == "account") {
-                isConnected = true;
-                break;
-            }
-        }
+        boolean isConnected = SessionUtil.getSession(request, response) != null;
+        
         if (!isConnected) {
     %>
     <a href="${pageContext.request.contextPath}/auth/login">Se connecter</a>
