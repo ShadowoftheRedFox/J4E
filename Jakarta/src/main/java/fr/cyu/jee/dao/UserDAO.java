@@ -33,7 +33,29 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public boolean delete(final int id) {
-        return HibernateUtil.remove(id, User.class);
+        Boolean res = HibernateUtil.useSession(new SessionWrapper<Boolean>() {
+            @Override
+            public Boolean use(Transaction trs, Session session) {
+                User user = session.find(User.class, id);
+                if (user != null) {
+                     
+                    session.createNativeMutationQuery("DELETE FROM user_project WHERE user_id = :userId")
+                           .setParameter("userId", id)
+                           .executeUpdate();
+                    
+                    session.remove(user);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+        
+        if (res != null) {
+            return res;
+        } else {
+            return false;
+        }
     }
 
     @Override
