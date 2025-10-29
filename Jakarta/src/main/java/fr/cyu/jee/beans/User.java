@@ -96,6 +96,10 @@ public class User {
         Objects.requireNonNull(lastName);
         this.lastName = lastName;
     }
+    
+    public String getFirstLastName() {
+        return getFirstName() + " " + getLastName();
+    }
 
     public Set<String> getRanks() {
         return this.ranks;

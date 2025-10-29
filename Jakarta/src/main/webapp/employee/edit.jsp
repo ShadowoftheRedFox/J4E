@@ -19,7 +19,7 @@
         if (u == null) {
     %>
     <div>
-        <p>Utilisateur inconnu <%= request.getAttribute("id")%> <%= request.getAttribute("path")%>
+        <p>Utilisateur inconnu <%= request.getAttribute("id")%>
         </p>
     </div>
     <%

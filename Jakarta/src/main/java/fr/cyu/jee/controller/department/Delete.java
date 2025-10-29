@@ -27,6 +27,8 @@ public class Delete extends HttpServlet {
             doGet(req, resp);
             return;
         }
+        
+        // TODO move all users in the department to another department, or fail if can't
 
         DepartmentDAO ddao = new DepartmentDAO();
         ddao.delete(id);

@@ -30,11 +30,14 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Nom</th>
+                <th scope="col">Employés</th>
             </tr>
             </thead>
             <tbody>
             <% List<Department> deps = (List<Department>) request.getAttribute("departments");
+                List<String> deps_users = (List<String>) request.getAttribute("users_deps");
                 if (deps != null) {
+                    int id = 0;
                     for (Department d : deps) {
             %>
             <tr>
@@ -43,6 +46,9 @@
                 </th>
                 <td>
                     <%= d.getName()%>
+                </td>
+                <td>
+                    <%= deps_users.get(id)%>
                 </td>
                 <td>
                     <div class="action-menu">
@@ -56,7 +62,8 @@
                     </div>
                 </td>
             </tr>
-            <% }
+            <% id++;
+            }
             } %>
             </tbody>
         </table>
