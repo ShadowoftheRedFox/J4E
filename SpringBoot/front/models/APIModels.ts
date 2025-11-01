@@ -4,8 +4,8 @@ export enum Permission { }
 export interface Employee {
     id: number,
     username: string,
-    first_name: string,
-    last_name: string,
+    firstName: string,
+    lastName: string,
     department: number,
     role: EmployeeRole,
     permissions: Permission[]

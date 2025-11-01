@@ -1,0 +1,15 @@
+<header class="flex flex-nowrap flex-row justify-between p-4 sticky top-0 z-50 bg-white">
+    <div class="flex flex-row flex-wrap gap-4">
+        <a routerLink="/" title="Menu principal"><mat-icon>home</mat-icon></a>
+        <a routerLink="/employees">Employés</a>
+        <a routerLink="/departments">Départements</a>
+        <a routerLink="/projects">Projets</a>
+        <a routerLink="/payslip">Paies</a>
+        <a routerLink="/report">Rapport</a>
+    </div>
+    @if (isAuth) {
+    <button (click)="disconnect()">{{getFirstLastNames()}} - Déconnexion</button>
+    } @else {
+    <a routerLink="/auth">Connexion</a>
+    }
+</header>
