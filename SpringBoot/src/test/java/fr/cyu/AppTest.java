@@ -1,4 +1,4 @@
-package simplex.simplex;
+package fr.cyu;
 
 public class AppTest {
 }

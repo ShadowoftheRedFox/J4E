@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
+import { Employee } from '../models/APIModels';
 
 const ApiUrl = environment.API_URL + ":" + environment.API_PORT + "/";
 
@@ -11,11 +12,12 @@ export class ApiService {
     readonly http = inject(HttpClient);
 
     readonly employee = {
-        get(id: number) {
-            // TODO api request
-            return id;
+        get: (id: number) => {
+            return this.sendApiRequest<Employee[]>("GET", "employee/" + id, {}, "Getting employee " + id);
         },
-        // ...
+        getAll: () => {
+            return this.sendApiRequest<Employee[]>("GET", "employee", {}, "Getting all employees");
+        }
     }
 
     private sendApiRequest<T>(
