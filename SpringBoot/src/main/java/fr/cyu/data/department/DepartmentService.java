@@ -22,4 +22,11 @@ public class DepartmentService {
         }
         return Optional.of(dr.save(new Department(name)));
     }
+
+    public Optional<Department> getById(Integer id) {
+        if (id == null || id <= 0) {
+            return Optional.empty();
+        }
+        return dr.findById(id);
+    }
 }

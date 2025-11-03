@@ -25,4 +25,11 @@ public class EmployeeService {
         }
         return Optional.of(er.save(new Employee(username, password, first, last, d)));
     }
+
+    public Optional<Employee> getById(Integer id) {
+        if (id == null || id <= 0) {
+            return Optional.empty();
+        }
+        return er.findById(id);
+    }
 }

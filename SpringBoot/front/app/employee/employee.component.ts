@@ -11,9 +11,12 @@ import { MatSort, MatSortModule, Sort } from "@angular/material/sort"
 import { MatMenuModule } from "@angular/material/menu"
 import { MatInputModule } from "@angular/material/input"
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
+import { EmployeeFormComponent } from './employee-form/employee-form.component';
+import { PopupService } from '../../services/popup.service';
 
-
-type Columns = "id" | "firstname" | "lastname" | "username" | "action" | "department" | "ranks" | "permissions";
+type Columns = "id" | "firstName" | "lastName" | "username" | "action" | "department" | "ranks" | "permissions";
 
 @Injectable()
 export class CustomPaginatorIntl implements MatPaginatorIntl {
@@ -59,9 +62,11 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
     providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
 })
 export class EmployeeComponent implements AfterViewInit {
-    readonly displayedColumns: Columns[] = ['id', 'firstname', 'lastname', 'action'];
+    readonly displayedColumns: Columns[] = ['id', 'firstName', 'lastName', 'action'];
 
-    private api = inject(ApiService);
+    private readonly api = inject(ApiService);
+    private readonly popup = inject(PopupService);
+    readonly dialog = inject(MatDialog);
 
     allEmployees: Employee[] = [];
     sortedEmployees: Employee[] = [];
@@ -80,13 +85,7 @@ export class EmployeeComponent implements AfterViewInit {
     }
 
     constructor() {
-        this.api.employee.getAll().subscribe(res => {
-            if (Array.isArray(res)) {
-                this.allEmployees = res;
-                this.sortedEmployees = res;
-                this.dataSource.data = res;
-            }
-        });
+        this.updateEmployees();
 
         this.filterControl.valueChanges.subscribe((c) => {
             if (!c || c.length == 0) {
@@ -106,6 +105,16 @@ export class EmployeeComponent implements AfterViewInit {
             });
             this.sortedEmployees = this.filteredEmployees;
             this.dataSource.data = this.filteredEmployees;
+        });
+    }
+
+    updateEmployees() {
+        this.api.employee.getAll().subscribe(res => {
+            if (Array.isArray(res)) {
+                this.allEmployees = res;
+                this.sortedEmployees = res;
+                this.dataSource.data = res;
+            }
         });
     }
 
@@ -134,9 +143,9 @@ export class EmployeeComponent implements AfterViewInit {
                     return this.compare(a.id, b.id, isAsc);
                 case "username":
                     return this.compare(a.username, b.username, isAsc);
-                case "firstname":
+                case "firstName":
                     return this.compare(a.firstName, b.firstName, isAsc);
-                case "lastname":
+                case "lastName":
                     return this.compare(a.lastName, b.lastName, isAsc);
                 default:
                     return 0;
@@ -144,4 +153,72 @@ export class EmployeeComponent implements AfterViewInit {
         })
     }
 
+    add() {
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                component: EmployeeFormComponent,
+                title: "Création d'un employé",
+                data: { employee: null },
+                btnNotOk: ""
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            console.warn(res);
+            if (res) {
+                this.updateEmployees();
+            }
+        });
+    }
+
+    edit(id: number) {
+        const e = this.allEmployees.find(v => v.id == id);
+        if (e == undefined) {
+            this.popup.openSnackBar({ message: "Employé inconnu" });
+            return;
+        }
+
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                component: EmployeeFormComponent,
+                data: { employee: e },
+                title: "Modification de " + e.firstName + " " + e.lastName,
+                btnNotOk: ""
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res) {
+                this.updateEmployees();
+            }
+        });
+    }
+
+    delete(id: number) {
+        const e = this.allEmployees.find(v => v.id == id);
+        if (e == undefined) {
+            this.popup.openSnackBar({ message: "Employé inconnu" });
+            return;
+        }
+
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                title: "Suppression de " + e.firstName + " " + e.lastName,
+                btnNotOk: "Annuler",
+                btnOk: "Effacer",
+                warn: true,
+                text: "Êtes vous sur de vouloir effacer cet employé?"
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res) {
+                this.api.employee.delete(id).subscribe({
+                    next: () => {
+                        this.popup.openSnackBar({ message: "Employé effacé" });
+                    },
+                    error: () => {
+                        this.popup.openSnackBar({ message: "Échec de l'interaction" });
+                    }
+                });
+            }
+        });
+    }
 }

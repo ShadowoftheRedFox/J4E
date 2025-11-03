@@ -1,0 +1,53 @@
+<form [formGroup]="formGroup" (ngSubmit)="submitForm()" class="flex flex-col items-stretch justify-center flex-nowrap">
+    <mat-form-field>
+        <mat-label>Nom d'utilisateur</mat-label>
+        <input matInput formControlName="username">
+        @if (formGroup.controls.username.invalid) {
+        <mat-error>{{genericError(formGroup.controls.username)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Prénom</mat-label>
+        <input matInput formControlName="firstName">
+        @if (formGroup.controls.firstName.invalid) {
+        <mat-error>{{genericError(formGroup.controls.firstName)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="lastName">
+        @if (formGroup.controls.lastName.invalid) {
+        <mat-error>{{genericError(formGroup.controls.lastName)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Mot de passe</mat-label>
+        <input matInput formControlName="password">
+        @if (formGroup.controls.password.invalid) {
+        <mat-error>{{genericError(formGroup.controls.password)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Rôle</mat-label>
+        <mat-select formControlName="role">
+            @for (role of roles; track role) {
+            <mat-option [value]="role">{{role}}</mat-option>
+            }
+        </mat-select>
+        @if (formGroup.controls.role.invalid) {
+        <mat-error>{{genericError(formGroup.controls.role)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Département</mat-label>
+        <mat-select formControlName="department">
+            @for (department of departments; track department) {
+            <mat-option [value]="department.id">{{department.name}}</mat-option>
+            }
+        </mat-select>
+        @if (formGroup.controls.department.invalid) {
+        <mat-error>{{departmentError()}}</mat-error>
+        }
+    </mat-form-field>
+    <button mat-flat-button type="submit" [disabled]="formGroup.invalid">{{employee ? "Modifier" : "Ajouter"}}</button>
+</form>
