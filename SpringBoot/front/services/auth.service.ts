@@ -13,10 +13,12 @@ export class AuthService {
     user: Employee | null = null;
 
     disconnect() {
-        //TODO
+        this.user = null;
+        this.isAuth.next(false);
     }
 
-    connect() {
-        //TODO
+    connect(employee: Employee) {
+        this.user = employee;
+        this.isAuth.next(true);
     }
 }

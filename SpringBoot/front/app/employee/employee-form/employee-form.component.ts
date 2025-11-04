@@ -6,7 +6,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Employee, EmployeeRole, EmployeePermission, Department } from '../../../models/APIModels';
 import { toDateTime } from '../../../models/date';
@@ -24,7 +23,6 @@ import { PopupService } from '../../../services/popup.service';
         MatSelectModule,
         ReactiveFormsModule,
         MatCheckboxModule,
-        ClipboardModule,
         MatTooltipModule
     ],
     templateUrl: './employee-form.component.html',

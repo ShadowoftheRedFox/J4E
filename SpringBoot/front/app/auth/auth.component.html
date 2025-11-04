@@ -1,1 +1,24 @@
-<p>auth works!</p>
+<form [formGroup]="formGroup" (ngSubmit)="submitForm()"
+    class="flex flex-col items-stretch justify-center flex-nowrap max-w-120 mx-auto my-[20dvh]">
+    <mat-form-field>
+        <mat-label>Nom d'utilisateur</mat-label>
+        <input matInput formControlName="username">
+        @if (formGroup.controls.username.invalid) {
+        <mat-error>{{genericError(formGroup.controls.username)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Mot de passe</mat-label>
+        <button mat-icon-button matSuffix (click)="visibilityToggle()">
+            <mat-icon>{{visibility}}</mat-icon>
+        </button>
+        <input matInput [type]="inputType" formControlName="password">
+        @if (formGroup.controls.password.invalid) {
+        <mat-error>{{genericError(formGroup.controls.password)}}</mat-error>
+        }
+    </mat-form-field>
+    @if (formGroup.hasError("failed")) {
+    <mat-error>Nom d'utilisateur ou mot de passe invalide</mat-error>
+    }
+    <button mat-flat-button type="submit" [disabled]="formGroup.invalid">Se connecter</button>
+</form>

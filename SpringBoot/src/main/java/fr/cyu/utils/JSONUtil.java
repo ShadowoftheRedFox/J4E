@@ -18,6 +18,8 @@ public class JSONUtil {
             .body("{\"status\":404,\"error\":\"page not found\"}");
     public static ResponseEntity<String> BAD_REQUEST_ERROR = ResponseEntity.badRequest()
             .body("{\"status\":400,\"error\":\"bad request\"}");
+    public static ResponseEntity<String> UNAUTHORIZED_ERROR = ResponseEntity.badRequest()
+            .body("{\"status\":401,\"error\":\"unauthorized\"}");
     public static ResponseEntity<String> OK = ResponseEntity.ok("{\"status\":200,\"message\":\"ok\"}");
 
     private JSONUtil() {

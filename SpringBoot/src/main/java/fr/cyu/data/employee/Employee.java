@@ -3,6 +3,7 @@ package fr.cyu.data.employee;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -42,18 +43,19 @@ public class Employee {
     @Size(min = 3, max = 50)
     private String lastName;
 
-    @ElementCollection(targetClass = Rank.class)
+    @ElementCollection(targetClass = Rank.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Rank> ranks = new HashSet<>();
 
-    @ElementCollection(targetClass = Permission.class)
+    @ElementCollection(targetClass = Permission.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Permission> permissions = new HashSet<>();
 
     @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", nullable = false)
     @JsonBackReference // prevent reference chain when serializing
+    @JsonAlias({ "departmentId" }) // TODO doesn't appear on front, another root to prevent references
     private Department department;
 
     public Employee() {

@@ -11,6 +11,12 @@ const ApiUrl = environment.API_URL + ":" + environment.API_PORT + "/";
 export class ApiService {
     readonly http = inject(HttpClient);
 
+    readonly auth = {
+        connect: (username: string, password: string) => {
+            return this.sendApiRequest<Employee>("POST", "auth", { username: username, password: password }, "Connecting with " + username);
+        },
+    }
+
     readonly employee = {
         get: (id: number) => {
             return this.sendApiRequest<Employee>("GET", "employee/" + id, {}, "Getting employee " + id);
