@@ -46,7 +46,26 @@ public class DepartmentDAO implements DAO<Department> {
 
     @Override
     public Collection<Department> find(Map<String, Object> filter) {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO j'arrive pas à lancer le projet (rip eclipse) donc pas testé
+        // https://docs.hibernate.org/orm/3.3/reference/fr-FR/html/queryhql.html
+        Collection<Department> departments = HibernateUtil.useSession(new SessionWrapper<Collection<Department>>() {
+            @Override
+            public Collection<Department> use(Transaction trs, Session session) {
+                String sql = "from Department D where 1=1 ";
+                if (filter.containsKey("name")) {
+                    sql += "and D.name like '*:name*' ";
+                }
+                sql += ";";
+
+                SelectionQuery<Department> q = session.createSelectionQuery(sql, Department.class);
+
+                if (filter.containsKey("name")) {
+                    q.setParameter("name", filter.get("name"));
+                }
+                return q.getResultList();
+            }
+        });
+
+        return departments;
     }
 }
