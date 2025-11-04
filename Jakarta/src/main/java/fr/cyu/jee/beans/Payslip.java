@@ -1,7 +1,7 @@
 package fr.cyu.jee.beans;
 
 import java.beans.JavaBean;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ public class Payslip {
     private int id;
 
     @NotNull
-    @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, targetEntity = User.class, fetch = FetchType.EAGER)
     private User user;
 
     @Column(name = "hour", nullable = false)
@@ -32,7 +32,7 @@ public class Payslip {
     private float malus;
 
     @Column(name = "date", nullable = false)
-    private Date date;
+    private Timestamp date;
 
     public int getId() {
         return id;
@@ -83,7 +83,7 @@ public class Payslip {
         this.malus = malus;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
@@ -91,7 +91,7 @@ public class Payslip {
         return wage * hour + bonus - malus;
     }
 
-    public void setDate(Date date) throws NullPointerException {
+    public void setDate(Timestamp date) throws NullPointerException {
         Objects.requireNonNull(date);
         this.date = date;
     }
