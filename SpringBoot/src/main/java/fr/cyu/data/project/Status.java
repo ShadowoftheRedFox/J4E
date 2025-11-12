@@ -17,7 +17,7 @@ public enum Status {
 
     public static Status fromValue(String v) {
         for (Status s : values())
-            if (s.status.equals(v))
+            if (s.name().equals(v))
                 return s;
         throw new IllegalArgumentException("Unknown status: " + v);
     }
