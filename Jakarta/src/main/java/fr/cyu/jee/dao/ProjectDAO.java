@@ -59,7 +59,26 @@ public class ProjectDAO implements DAO<Project> {
 
     @Override
     public Collection<Project> find(Map<String, Object> filter) {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO copié coler modifié de departement y a peut être des trucs à changer pour que ça aille avec la BDD
+        // https://docs.hibernate.org/orm/3.3/reference/fr-FR/html/queryhql.html
+        Collection<Project> projects = HibernateUtil.useSession(new SessionWrapper<Collection<Project>>() {
+            @Override
+            public Collection<Project> use(Transaction trs, Session session) {
+                String sql = "from Project P where 1=1 ";
+                if (filter.containsKey("name")) {
+                    sql += "and P.name like '*:name*' ";
+                }
+                sql += ";";
+
+                SelectionQuery<Project> q = session.createSelectionQuery(sql, Project.class);
+
+                if (filter.containsKey("name")) {
+                    q.setParameter("name", filter.get("name"));
+                }
+                return q.getResultList();
+            }
+        });
+
+        return projects;
     }
 }
