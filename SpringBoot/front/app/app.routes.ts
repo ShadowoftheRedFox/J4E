@@ -7,9 +7,6 @@ import { DepartmentComponent } from './department/department.component';
 import { PayslipComponent } from './payslip/payslip.component';
 import { ReportComponent } from './report/report.component';
 import { AuthComponent } from './auth/auth.component';
-import { EmployeeFormComponent } from './employee/employee-form/employee-form.component';
-import { DepartmentFormComponent } from './department/department-form/department-form.component';
-import { ProjectFormComponent } from './project/project-form/project-form.component';
 
 const FormatedTitle = " - " + environment.TITLE;
 
@@ -25,29 +22,14 @@ export const routes: Routes = [
         component: EmployeeComponent
     },
     {
-        title: "Employés: Ajout" + environment.TITLE,
-        path: "employees/add",
-        component: EmployeeFormComponent
-    },
-    {
         title: "Projets" + environment.TITLE,
         path: "projects",
         component: ProjectComponent
     },
     {
-        title: "Projets: Ajout" + environment.TITLE,
-        path: "projects/add",
-        component: ProjectFormComponent
-    },
-    {
         title: "Départements" + environment.TITLE,
         path: "departments",
         component: DepartmentComponent
-    },
-    {
-        title: "Départements: Ajout" + environment.TITLE,
-        path: "departments/add",
-        component: DepartmentFormComponent
     },
     {
         title: "Paies" + environment.TITLE,

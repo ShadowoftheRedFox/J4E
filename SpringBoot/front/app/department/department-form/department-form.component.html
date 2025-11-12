@@ -1,1 +1,11 @@
-<p>department-form works!</p>
+<form [formGroup]="formGroup" (ngSubmit)="submitForm()" class="flex flex-col items-stretch justify-center flex-nowrap">
+    <mat-form-field>
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="name">
+        @if (formGroup.controls.name.invalid) {
+        <mat-error>{{genericError(formGroup.controls.name)}}</mat-error>
+        }
+    </mat-form-field>
+    <button mat-flat-button type="submit" [disabled]="formGroup.invalid">{{department ? "Modifier" :
+        "Ajouter"}}</button>
+</form>

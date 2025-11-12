@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-import { Department, Employee, Project } from '../models/APIModels';
+import { BaseResponse, Department, Employee, Project } from '../models/APIModels';
 
 const ApiUrl = environment.API_URL + ":" + environment.API_PORT + "/";
 
@@ -25,13 +25,13 @@ export class ApiService {
             return this.sendApiRequest<Employee[]>("GET", "employee", {}, "Getting all employees");
         },
         create: (employee: Employee) => {
-            return this.sendApiRequest<boolean>("POST", "employee/add", employee, "Creating new employee");
+            return this.sendApiRequest<BaseResponse>("POST", "employee", employee, "Creating new employee");
         },
         update: (id: number, employee: Employee) => {
-            return this.sendApiRequest<boolean>("PUT", "employee/" + id, employee, "Updating employee " + id);
+            return this.sendApiRequest<BaseResponse>("PUT", "employee/" + id, employee, "Updating employee " + id);
         },
         delete: (id: number) => {
-            return this.sendApiRequest<boolean>("DELETE", "employee/" + id, {}, "Deleting employee" + id);
+            return this.sendApiRequest<BaseResponse>("DELETE", "employee/" + id, {}, "Deleting employee" + id);
         }
     }
 
@@ -43,10 +43,13 @@ export class ApiService {
             return this.sendApiRequest<Department[]>("GET", "department", {}, "Getting all departments");
         },
         create: (department: Department) => {
-            return this.sendApiRequest<boolean>("POST", "department/add", department, "Creating new department");
+            return this.sendApiRequest<BaseResponse>("POST", "department", department, "Creating new department");
         },
         update: (id: number, department: Department) => {
-            return this.sendApiRequest<boolean>("PUT", "department/" + id + "/edit", department, "Updating department " + id);
+            return this.sendApiRequest<BaseResponse>("PUT", "department/" + id, department, "Updating department " + id);
+        },
+        delete: (id: number) => {
+            return this.sendApiRequest<BaseResponse>("DELETE", "department/" + id, {}, "Deleting department " + id);
         },
     }
 
@@ -58,10 +61,13 @@ export class ApiService {
             return this.sendApiRequest<Project[]>("GET", "project", {}, "Getting all projects");
         },
         create: (project: Project) => {
-            return this.sendApiRequest<boolean>("POST", "project/add", project, "Creating new project");
+            return this.sendApiRequest<BaseResponse>("POST", "project", project, "Creating new project");
         },
         update: (id: number, project: Project) => {
-            return this.sendApiRequest<boolean>("PUT", "project/" + id + "/edit", project, "Updating project " + id);
+            return this.sendApiRequest<BaseResponse>("PUT", "project/" + id + "/edit", project, "Updating project " + id);
+        },
+        delete: (id: number) => {
+            return this.sendApiRequest<BaseResponse>("DELETE", "project/" + id, {}, "Deleting project " + id);
         },
     }
 

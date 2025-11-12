@@ -16,7 +16,7 @@
         <button mat-button [mat-dialog-close]="-1">{{data.btnNotOk}}</button>
         }
         @if (data.btnOk) {
-        <button mat-flat-button (click)="validate()" cdkFocusInitial
+        <button mat-flat-button (click)="getOuput(1, true)" cdkFocusInitial
             [ngStyle]="data.warn? {'color':'white', 'background-color':'red'}: {}">{{data.btnOk}}</button>
         }
     </mat-dialog-actions>

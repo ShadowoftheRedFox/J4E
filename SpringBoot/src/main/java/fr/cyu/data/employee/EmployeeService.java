@@ -32,4 +32,16 @@ public class EmployeeService {
         }
         return er.findById(id);
     }
+
+    public boolean deleteById(Integer id) {
+        if (id == null || id <= 0) {
+            return false;
+        }
+        if (getById(id).isEmpty()) {
+            return false;
+        }
+
+        er.deleteById(id);
+        return true;
+    }
 }

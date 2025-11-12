@@ -11,7 +11,10 @@ import { MatSort, MatSortModule, Sort } from "@angular/material/sort"
 import { MatMenuModule } from "@angular/material/menu"
 import { MatInputModule } from "@angular/material/input"
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { PopupService } from '../../services/popup.service';
+import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
+import { DepartmentFormComponent } from './department-form/department-form.component';
 
 type Columns = "id" | "name" /*| "employees "*/ | "action";
 
@@ -52,8 +55,7 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
         MatMenuModule,
         ReactiveFormsModule,
         MatFormFieldModule,
-        MatInputModule,
-        RouterLink
+        MatInputModule
     ],
     templateUrl: './department.component.html',
     styleUrl: './department.component.scss',
@@ -63,8 +65,9 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
 export class DepartmentComponent implements AfterViewInit {
     readonly displayedColumns: Columns[] = ['id', 'name', 'action'];
 
-
     private readonly api = inject(ApiService);
+    private readonly popup = inject(PopupService);
+    private readonly dialog = inject(MatDialog);
 
     allDepartments: Department[] = [];
     sortedDepartments: Department[] = [];
@@ -83,13 +86,7 @@ export class DepartmentComponent implements AfterViewInit {
     }
 
     constructor() {
-        this.api.department.getAll().subscribe(res => {
-            if (Array.isArray(res)) {
-                this.allDepartments = res;
-                this.sortedDepartments = res;
-                this.dataSource.data = res;
-            }
-        });
+        this.updateDepartments();
 
         this.filterControl.valueChanges.subscribe((c) => {
             if (!c || c.length == 0) {
@@ -107,6 +104,16 @@ export class DepartmentComponent implements AfterViewInit {
             });
             this.sortedDepartments = this.filteredDepartments;
             this.dataSource.data = this.filteredDepartments;
+        });
+    }
+
+    updateDepartments() {
+        this.api.department.getAll().subscribe(res => {
+            if (Array.isArray(res)) {
+                this.allDepartments = res;
+                this.sortedDepartments = res;
+                this.dataSource.data = res;
+            }
         });
     }
 
@@ -139,5 +146,73 @@ export class DepartmentComponent implements AfterViewInit {
                     return 0;
             }
         })
+    }
+
+    add() {
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                component: DepartmentFormComponent,
+                title: "Création d'un département",
+                data: { department: null },
+                btnNotOk: ""
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            console.warn(res);
+            this.updateDepartments();
+        });
+    }
+
+    edit(id: number) {
+        const p = this.allDepartments.find(v => v.id == id);
+        if (p == undefined) {
+            this.popup.openSnackBar({ message: "Département inconnu" });
+            return;
+        }
+
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                component: DepartmentFormComponent,
+                data: { department: p },
+                title: "Modification de " + p.name,
+                btnNotOk: ""
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res) {
+                this.updateDepartments();
+            }
+        });
+    }
+
+    delete(id: number) {
+        const p = this.allDepartments.find(v => v.id == id);
+        if (p == undefined) {
+            this.popup.openSnackBar({ message: "Département inconnu" });
+            return;
+        }
+
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                title: "Suppression de " + p.name,
+                btnNotOk: "Annuler",
+                btnOk: "Effacer",
+                warn: true,
+                text: "Êtes vous sur de vouloir effacer ce département?"
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res) {
+                this.api.department.delete(id).subscribe({
+                    next: () => {
+                        this.popup.openSnackBar({ message: "Département effacé" });
+                        this.updateDepartments();
+                    },
+                    error: () => {
+                        this.popup.openSnackBar({ message: "Échec de l'interaction" });
+                    }
+                });
+            }
+        });
     }
 }

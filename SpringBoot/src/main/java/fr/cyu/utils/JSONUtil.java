@@ -9,11 +9,23 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import fr.cyu.data.employee.Employee;
 
 public class JSONUtil {
     private static ObjectMapper json = new ObjectMapper();
+
+    static {
+        SimpleModule m = new SimpleModule();
+        m.addSerializer(Employee.class, new EmployeeModule());
+        json.registerModule(m);
+    }
+
     public static ResponseEntity<String> SERVER_ERROR = ResponseEntity.internalServerError()
             .body("{\"status\":500,\"error\":\"unknown error\"}");
+    public static ResponseEntity<String> NOT_YET_IMPLEMENTED = ResponseEntity.status(501)
+            .body("{\"status\":501,\"error\":\"not yet implemented\"}");
     public static ResponseEntity<String> NOT_FOUND_ERROR = ResponseEntity.status(404)
             .body("{\"status\":404,\"error\":\"page not found\"}");
     public static ResponseEntity<String> BAD_REQUEST_ERROR = ResponseEntity.badRequest()

@@ -11,17 +11,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.cyu.controller.dto.NewProjectDTO;
 import fr.cyu.data.project.Project;
 import fr.cyu.data.project.ProjectService;
 import fr.cyu.data.project.Status;
 import fr.cyu.utils.JSONUtil;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @RestController
 @CrossOrigin
@@ -47,25 +46,8 @@ public class ProjectController {
         return ResponseEntity.ok(JSONUtil.stringify(e.get()));
     }
 
-    public class NewProjectDTO {
-        @NotNull
-        @NotEmpty
-        @Size(min = 3, max = 50)
-        private String name;
-
-        private String status;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-    }
-
-    @PostMapping(value = "/add")
-    public ResponseEntity<String> newProject(@Valid NewProjectDTO dto, BindingResult bindingResult) {
+    @PostMapping(value = "")
+    public ResponseEntity<String> newProject(@Valid @RequestBody NewProjectDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
@@ -73,12 +55,12 @@ public class ProjectController {
         return res ? JSONUtil.OK : JSONUtil.BAD_REQUEST_ERROR;
     }
 
-    @PutMapping(value = "/{id}/edit")
-    public ResponseEntity<String> editProject(@PathVariable("id") Integer id, @Valid NewProjectDTO dto,
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<String> editProject(@PathVariable("id") Integer id, @Valid @RequestBody NewProjectDTO dto,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
-        return JSONUtil.SERVER_ERROR;
+        return JSONUtil.NOT_YET_IMPLEMENTED;
     }
 }

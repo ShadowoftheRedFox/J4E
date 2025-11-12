@@ -38,7 +38,7 @@ public class EmployeeController {
         return JSONUtil.stringify(es.getAll());
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping(value = "")
     public ResponseEntity<String> newEmployee(@Valid @RequestBody NewEmployeeDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
@@ -61,19 +61,21 @@ public class EmployeeController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<String> editEmployee(@PathVariable("id") Integer id, @Valid NewEmployeeDTO dto,
+    public ResponseEntity<String> editEmployee(@PathVariable("id") Integer id, @Valid @RequestBody NewEmployeeDTO dto,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
-        return JSONUtil.SERVER_ERROR;
+        return JSONUtil.NOT_YET_IMPLEMENTED;
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("id") Integer id, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    public ResponseEntity<String> deleteEmployee(@PathVariable("id") Integer id) {
+        if (id == null || id <= 0) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
-        return JSONUtil.SERVER_ERROR;
+        boolean res = es.deleteById(id);
+
+        return res ? JSONUtil.OK : JSONUtil.NOT_FOUND_ERROR;
     }
 }

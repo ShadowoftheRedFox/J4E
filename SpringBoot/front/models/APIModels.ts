@@ -1,9 +1,19 @@
+export interface BaseResponse {
+    status: number,
+    error?: string,
+    message?: string
+}
 
-export const EmployeeRole = [
-    "Administrateur"
+export const EmployeeRank = [
+    "Administrateur",
+    "Manageur",
+    "Employé",
+    "Stagiaire",
+    "Senior",
+    "Junior",
 ] as const;
 
-export type EmployeeRole = typeof EmployeeRole[number];
+export type EmployeeRank = typeof EmployeeRank[number];
 
 export const EmployeePermission = [
     "EDIT_USER",
@@ -35,7 +45,7 @@ export interface Employee {
     firstName: string,
     lastName: string,
     department: number,
-    role: EmployeeRole,
+    ranks: EmployeeRank[],
     permissions: EmployeePermission[],
     password?: string
 }
@@ -50,18 +60,23 @@ export const ProjectStatus = [
     "ONGOING",
     "FINISHED",
     "CANCELED"
-];
+] as const;
 
 export type ProjectStatus = typeof ProjectStatus[number];
 
 export interface Project {
     id: number,
     name: string,
-    status: /*keyof typeof*/ ProjectStatus
+    status: ProjectStatus
     employees: Employee[]
 }
 
 export interface Payslip {
     id: number,
-    employee: Employee
+    employee: Employee,
+    hour: number,
+    wage: number,
+    bonus: number,
+    malus: number,
+    date: Date,
 }

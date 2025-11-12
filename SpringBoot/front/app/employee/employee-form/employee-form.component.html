@@ -2,42 +2,51 @@
     <mat-form-field>
         <mat-label>Nom d'utilisateur</mat-label>
         <input matInput formControlName="username">
-        @if (formGroup.controls.username.invalid) {
-        <mat-error>{{genericError(formGroup.controls.username)}}</mat-error>
+        @if (formGroup.controls["username"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["username"])}}</mat-error>
         }
     </mat-form-field>
     <mat-form-field>
         <mat-label>Prénom</mat-label>
         <input matInput formControlName="firstName">
-        @if (formGroup.controls.firstName.invalid) {
-        <mat-error>{{genericError(formGroup.controls.firstName)}}</mat-error>
+        @if (formGroup.controls["firstName"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["firstName"])}}</mat-error>
         }
     </mat-form-field>
     <mat-form-field>
         <mat-label>Nom</mat-label>
         <input matInput formControlName="lastName">
-        @if (formGroup.controls.lastName.invalid) {
-        <mat-error>{{genericError(formGroup.controls.lastName)}}</mat-error>
+        @if (formGroup.controls["lastName"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["lastName"])}}</mat-error>
         }
     </mat-form-field>
     <mat-form-field>
-        <mat-label>Mot de passe</mat-label>
+        <mat-label>{{employee !== null ? "Changer le mot de passe" : "Mot de passe"}}</mat-label>
         <input matInput formControlName="password">
-        @if (formGroup.controls.password.invalid) {
-        <mat-error>{{genericError(formGroup.controls.password)}}</mat-error>
+        @if (formGroup.controls["password"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["password"])}}</mat-error>
         }
     </mat-form-field>
-    <mat-form-field>
+    <div class="flex flex-col">
         <mat-label>Rôle</mat-label>
-        <mat-select formControlName="role">
-            @for (role of roles; track role) {
-            <mat-option [value]="role">{{role}}</mat-option>
-            }
-        </mat-select>
-        @if (formGroup.controls.role.invalid) {
-        <mat-error>{{genericError(formGroup.controls.role)}}</mat-error>
+        @for (rank of ranks; track rank) {
+        <mat-checkbox (change)="changeRank(rank, $event.checked)"
+            [checked]="employee?.ranks?.includes(rank)">{{rank}}</mat-checkbox>
         }
-    </mat-form-field>
+        @if (ranksCtrl.invalid) {
+        <mat-error>{{genericError(ranksCtrl)}}</mat-error>
+        }
+    </div>
+    <div class="flex flex-col">
+        <mat-label>Permissions</mat-label>
+        @for (perm of permissions; track perm) {
+        <mat-checkbox (change)="changePermission(perm, $event.checked)"
+            [checked]="employee?.permissions?.includes(perm)">{{perm}}</mat-checkbox>
+        }
+        @if (permissionsCtrl.invalid) {
+        <mat-error>{{genericError(permissionsCtrl)}}</mat-error>
+        }
+    </div>
     <mat-form-field>
         <mat-label>Département</mat-label>
         <mat-select formControlName="department">
@@ -45,7 +54,7 @@
             <mat-option [value]="department.id">{{department.name}}</mat-option>
             }
         </mat-select>
-        @if (formGroup.controls.department.invalid) {
+        @if (formGroup.controls["department"].invalid) {
         <mat-error>{{departmentError()}}</mat-error>
         }
     </mat-form-field>

@@ -11,7 +11,10 @@ import { MatSort, MatSortModule, Sort } from "@angular/material/sort"
 import { MatMenuModule } from "@angular/material/menu"
 import { MatInputModule } from "@angular/material/input"
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { PopupService } from '../../services/popup.service';
+import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
+import { ProjectFormComponent } from './project-form/project-form.component';
 
 
 type Columns = "id" | "name" | "status" /*| "projects"*/ | "action";
@@ -53,8 +56,7 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
         MatMenuModule,
         ReactiveFormsModule,
         MatFormFieldModule,
-        MatInputModule,
-        RouterLink
+        MatInputModule
     ],
     templateUrl: './project.component.html',
     styleUrl: './project.component.scss'
@@ -63,6 +65,8 @@ export class ProjectComponent implements AfterViewInit {
     readonly displayedColumns: Columns[] = ['id', 'name', 'status', 'action'];
 
     private readonly api = inject(ApiService);
+    private readonly popup = inject(PopupService);
+    readonly dialog = inject(MatDialog);
 
     allProjects: Project[] = [];
     sortedProjects: Project[] = [];
@@ -81,13 +85,7 @@ export class ProjectComponent implements AfterViewInit {
     }
 
     constructor() {
-        this.api.project.getAll().subscribe(res => {
-            if (Array.isArray(res)) {
-                this.allProjects = res;
-                this.sortedProjects = res;
-                this.dataSource.data = res;
-            }
-        });
+        this.updateProjects();
 
         this.filterControl.valueChanges.subscribe((c) => {
             if (!c || c.length == 0) {
@@ -106,6 +104,16 @@ export class ProjectComponent implements AfterViewInit {
             });
             this.sortedProjects = this.filteredProjects;
             this.dataSource.data = this.filteredProjects;
+        });
+    }
+
+    updateProjects() {
+        this.api.project.getAll().subscribe(res => {
+            if (Array.isArray(res)) {
+                this.allProjects = res;
+                this.sortedProjects = res;
+                this.dataSource.data = res;
+            }
         });
     }
 
@@ -140,5 +148,75 @@ export class ProjectComponent implements AfterViewInit {
                     return 0;
             }
         })
+    }
+
+    add() {
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                component: ProjectFormComponent,
+                title: "Création d'un projet",
+                data: { project: null },
+                btnNotOk: ""
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            console.warn(res);
+            if (res) {
+                this.updateProjects();
+            }
+        });
+    }
+
+    edit(id: number) {
+        const e = this.allProjects.find(v => v.id == id);
+        if (e == undefined) {
+            this.popup.openSnackBar({ message: "Projet inconnu" });
+            return;
+        }
+
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                component: ProjectFormComponent,
+                data: { employee: e },
+                title: "Modification de " + e.name,
+                btnNotOk: ""
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res) {
+                this.updateProjects();
+            }
+        });
+    }
+
+    delete(id: number) {
+        const p = this.allProjects.find(v => v.id == id);
+        if (p == undefined) {
+            this.popup.openSnackBar({ message: "Projet inconnu" });
+            return;
+        }
+
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                title: "Suppression de " + p.name,
+                btnNotOk: "Annuler",
+                btnOk: "Effacer",
+                warn: true,
+                text: "Êtes vous sur de vouloir effacer cet projet?"
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res) {
+                this.api.employee.delete(id).subscribe({
+                    next: () => {
+                        this.popup.openSnackBar({ message: "Projet effacé" });
+                        this.updateProjects();
+                    },
+                    error: () => {
+                        this.popup.openSnackBar({ message: "Échec de l'interaction" });
+                    }
+                });
+            }
+        });
     }
 }

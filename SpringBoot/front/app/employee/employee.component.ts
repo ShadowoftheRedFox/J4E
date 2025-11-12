@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
 import { EmployeeFormComponent } from './employee-form/employee-form.component';
 import { PopupService } from '../../services/popup.service';
+import { AuthService } from '../../services/auth.service';
 
 type Columns = "id" | "firstName" | "lastName" | "username" | "action" | "department" | "ranks" | "permissions";
 
@@ -62,19 +63,23 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
     providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
 })
 export class EmployeeComponent implements AfterViewInit {
-    readonly displayedColumns: Columns[] = ['id', 'firstName', 'lastName', 'action'];
+    readonly displayedColumns: Columns[] = ['id', 'username', 'firstName', 'lastName', 'ranks', 'department', 'action'];
 
     private readonly api = inject(ApiService);
+    private readonly auth = inject(AuthService);
     private readonly popup = inject(PopupService);
     readonly dialog = inject(MatDialog);
 
     allEmployees: Employee[] = [];
     sortedEmployees: Employee[] = [];
     filteredEmployees: Employee[] = [];
+    departments: Map<number, string> = new Map<number, string>();
 
     dataSource = new MatTableDataSource<Employee>([]);
 
     filterControl = new FormControl("");
+
+    ownId = this.auth.user?.id || 0;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -86,6 +91,13 @@ export class EmployeeComponent implements AfterViewInit {
 
     constructor() {
         this.updateEmployees();
+
+        this.api.department.getAll().subscribe(res => {
+            if (res == null || !Array.isArray(res)) { return; }
+            res.forEach(d => {
+                this.departments.set(d.id, d.name);
+            });
+        });
 
         this.filterControl.valueChanges.subscribe((c) => {
             if (!c || c.length == 0) {
@@ -147,8 +159,10 @@ export class EmployeeComponent implements AfterViewInit {
                     return this.compare(a.firstName, b.firstName, isAsc);
                 case "lastName":
                     return this.compare(a.lastName, b.lastName, isAsc);
+                case "department":
+                    return this.compare(this.departments.get(a.department) || "Aucun", this.departments.get(b.department) || "Aucun", isAsc);
                 default:
-                    return 0;
+                    return isAsc ? 0 : 1;
             }
         })
     }
@@ -209,10 +223,12 @@ export class EmployeeComponent implements AfterViewInit {
             }
         });
         ref.afterClosed().subscribe(res => {
+            console.log(res);
             if (res) {
                 this.api.employee.delete(id).subscribe({
                     next: () => {
                         this.popup.openSnackBar({ message: "Employé effacé" });
+                        this.updateEmployees();
                     },
                     error: () => {
                         this.popup.openSnackBar({ message: "Échec de l'interaction" });
