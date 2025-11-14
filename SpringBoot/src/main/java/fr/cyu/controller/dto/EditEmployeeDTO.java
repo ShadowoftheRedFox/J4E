@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class NewEmployeeDTO {
+public class EditEmployeeDTO {
     @NotBlank
     @Size(min = 3, max = 50)
     private String username;
@@ -17,8 +17,8 @@ public class NewEmployeeDTO {
     @NotBlank
     @Size(min = 3, max = 50)
     private String lastName;
-    @NotBlank
-    @Size(min = 3, max = 50)
+    @NotNull
+    @Size(max = 50)
     private String password;
     @NotNull
     @Min(1)

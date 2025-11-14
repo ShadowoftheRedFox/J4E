@@ -1,5 +1,6 @@
 package fr.cyu.controller;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.cyu.controller.dto.EditEmployeeDTO;
 import fr.cyu.controller.dto.NewEmployeeDTO;
 import fr.cyu.data.department.DepartmentService;
 import fr.cyu.data.employee.Employee;
 import fr.cyu.data.employee.EmployeeService;
+import fr.cyu.data.employee.Permission;
+import fr.cyu.data.employee.Rank;
 import fr.cyu.utils.JSONUtil;
 import jakarta.validation.Valid;
 
@@ -61,12 +65,41 @@ public class EmployeeController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<String> editEmployee(@PathVariable("id") Integer id, @Valid @RequestBody NewEmployeeDTO dto,
+    public ResponseEntity<String> editEmployee(@PathVariable("id") Integer id, @Valid @RequestBody EditEmployeeDTO dto,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
-        return JSONUtil.NOT_YET_IMPLEMENTED;
+
+        Employee e = es.getById(id).orElse(null);
+        if (e == null) {
+            return JSONUtil.NOT_FOUND_ERROR;
+        }
+
+        System.out.println(dto.getRanks());
+
+        if (!dto.getPassword().isBlank()) {
+            e.setPassword(dto.getPassword());
+        }
+
+        e.setDepartment(ds.getById(dto.getDepartment()).orElse(null));
+        e.setFirstName(dto.getFirstName());
+        e.setLastName(dto.getLastName());
+        e.setUsername(dto.getUsername());
+        HashSet<Permission> permissions = new HashSet<>();
+        dto.getPermissions().forEach(s -> {
+            permissions.add(Permission.fromValue(s));
+        });
+        e.setPermissions(permissions);
+        HashSet<Rank> ranks = new HashSet<>();
+        dto.getRanks().forEach(s -> {
+            ranks.add(Rank.fromValue(s));
+        });
+        e.setRanks(ranks);
+        es.update(e);
+        // BUG update works, but re updateing ranks or perms doesn't work :d
+
+        return JSONUtil.OK;
     }
 
     @DeleteMapping(value = "/{id}")

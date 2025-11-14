@@ -23,6 +23,7 @@ public class EmployeeService {
                 || password.isBlank() || first.isBlank() || first.isBlank() || last.isBlank() || d == null) {
             return Optional.empty();
         }
+
         return Optional.of(er.save(new Employee(username, password, first, last, d)));
     }
 
@@ -42,6 +43,14 @@ public class EmployeeService {
         }
 
         er.deleteById(id);
+        return true;
+    }
+
+    public boolean update(Employee e) {
+        if (e == null || !getById(e.getId()).isEmpty()) {
+            return false;
+        }
+        er.save(e);
         return true;
     }
 }

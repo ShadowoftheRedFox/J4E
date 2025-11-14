@@ -98,9 +98,18 @@ export class EmployeeFormComponent implements OnChanges {
             this.formGroup.controls["department"].setValue(this.employee.department || 0);
 
             this.ranksCtrl.patchValue(this.employee.ranks);
+            this.ranksCtrl.markAsTouched();
             this.permissionsCtrl.patchValue(this.employee.permissions);
+            this.permissionsCtrl.markAsTouched();
 
             this.formGroup.controls["password"].removeValidators([Validators.required, Validators.minLength(3)]);
+
+            if (this.employee.id === 1) {
+                this.formGroup.controls["username"].disable();
+                this.formGroup.controls["firstName"].disable();
+                this.formGroup.controls["lastName"].disable();
+                this.permissionsCtrl.disable();
+            }
         }
     }
 
@@ -155,6 +164,16 @@ export class EmployeeFormComponent implements OnChanges {
                 }
             });
         } else {
+            console.log({
+                id: this.employee.id,
+                username: this.formGroup.value.username as string,
+                firstName: this.formGroup.value.firstName as string,
+                lastName: this.formGroup.value.lastName as string,
+                ranks: this.ranksCtrl.value,
+                permissions: this.permissionsCtrl.value,
+                department: this.formGroup.value.department as number,
+                password: this.formGroup.value.password as string
+            });
             this.api.employee.update(this.employee.id, {
                 id: this.employee.id,
                 username: this.formGroup.value.username as string,

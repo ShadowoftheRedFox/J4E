@@ -5,12 +5,12 @@ export interface BaseResponse {
 }
 
 export const EmployeeRank = [
-    "Administrateur",
-    "Manageur",
-    "Employé",
-    "Stagiaire",
-    "Senior",
-    "Junior",
+    "ADMIN",
+    "MANAGER",
+    "PROJECT_LEADER",
+    "DEPARTMENT_LEADER",
+    "SENIOR",
+    "JUNIOR",
 ] as const;
 
 export type EmployeeRank = typeof EmployeeRank[number];

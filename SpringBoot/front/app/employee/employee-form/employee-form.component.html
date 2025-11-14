@@ -41,7 +41,7 @@
         <mat-label>Permissions</mat-label>
         @for (perm of permissions; track perm) {
         <mat-checkbox (change)="changePermission(perm, $event.checked)"
-            [checked]="employee?.permissions?.includes(perm)">{{perm}}</mat-checkbox>
+            [checked]="employee?.permissions?.includes(perm)" [disabled]="employee?.id === 1">{{perm}}</mat-checkbox>
         }
         @if (permissionsCtrl.invalid) {
         <mat-error>{{genericError(permissionsCtrl)}}</mat-error>

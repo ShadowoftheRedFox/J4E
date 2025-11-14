@@ -22,7 +22,9 @@ public enum Permission {
     DELETE_PERMISSION("Peut effacer les permissions"),
 
     VIEW_REPORT("Peut générer un rapport"),
-    VIEW_PAYSLIP("Peut générer une feuille de paie");
+    VIEW_PAYSLIP("Peut générer une feuille de paie"),
+
+    NONE("Aucune");
 
     private String permission;
 
@@ -36,7 +38,7 @@ public enum Permission {
 
     public static Permission fromValue(String v) {
         for (Permission p : values())
-            if (p.permission.equals(v))
+            if (p.name().equals(v))
                 return p;
         throw new IllegalArgumentException("Unknown permission: " + v);
     }
