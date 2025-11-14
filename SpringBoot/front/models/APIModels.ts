@@ -32,9 +32,7 @@ export const EmployeePermission = [
     "CREATE_PERMISSION",
     "DELETE_PERMISSION",
     "VIEW_REPORT",
-    "VIEW_PAYSLIP",
-
-    "NONE"
+    "VIEW_PAYSLIP"
 ] as const;
 
 export type EmployeePermission = typeof EmployeePermission[number];

@@ -83,8 +83,8 @@ export class EmployeeFormComponent implements OnChanges {
             firstName: this.fb.control("", [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
             lastName: this.fb.control("", [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
             password: this.fb.control("", [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
-            ranks: this.fb.array<EmployeeRank>([], [Validators.required]),
-            permissions: this.fb.array<EmployeePermission>([], [Validators.required]),
+            ranks: this.fb.array<EmployeeRank>([], [Validators.required, Validators.minLength(1)]),
+            permissions: this.fb.array<EmployeePermission>([]),
             department: this.fb.control<number>(0, [Validators.required, Validators.min(1)]),
         });
     }
@@ -97,10 +97,12 @@ export class EmployeeFormComponent implements OnChanges {
             this.formGroup.controls["password"].setValue(this.employee.password || "");
             this.formGroup.controls["department"].setValue(this.employee.department || 0);
 
-            this.ranksCtrl.patchValue(this.employee.ranks);
-            this.ranksCtrl.markAsTouched();
-            this.permissionsCtrl.patchValue(this.employee.permissions);
-            this.permissionsCtrl.markAsTouched();
+            this.employee.ranks.forEach(r => {
+                this.changeRank(r, true);
+            });
+            this.employee.permissions.forEach(p => {
+                this.changePermission(p, true);
+            });
 
             this.formGroup.controls["password"].removeValidators([Validators.required, Validators.minLength(3)]);
 
@@ -145,7 +147,7 @@ export class EmployeeFormComponent implements OnChanges {
                 firstName: this.formGroup.value.firstName as string,
                 lastName: this.formGroup.value.lastName as string,
                 ranks: this.ranksCtrl.value,
-                permissions: [] as EmployeePermission[], // TODO
+                permissions: this.permissionsCtrl.value,
                 department: this.formGroup.value.department as number,
                 password: this.formGroup.value.password as string
             }).subscribe({
@@ -164,16 +166,6 @@ export class EmployeeFormComponent implements OnChanges {
                 }
             });
         } else {
-            console.log({
-                id: this.employee.id,
-                username: this.formGroup.value.username as string,
-                firstName: this.formGroup.value.firstName as string,
-                lastName: this.formGroup.value.lastName as string,
-                ranks: this.ranksCtrl.value,
-                permissions: this.permissionsCtrl.value,
-                department: this.formGroup.value.department as number,
-                password: this.formGroup.value.password as string
-            });
             this.api.employee.update(this.employee.id, {
                 id: this.employee.id,
                 username: this.formGroup.value.username as string,
@@ -219,7 +211,6 @@ export class EmployeeFormComponent implements OnChanges {
         } else {
             this.ranksCtrl.insert(this.ranksCtrl.length, this.fb.nonNullable.control(rank));
         }
-        console.log(this.ranksCtrl.value);
     }
 
     changePermission(permisson: EmployeePermission, checked: boolean) {
@@ -237,6 +228,5 @@ export class EmployeeFormComponent implements OnChanges {
         } else {
             this.permissionsCtrl.insert(this.ranksCtrl.length, this.fb.nonNullable.control(permisson));
         }
-        console.log(this.permissionsCtrl.value);
     }
 }

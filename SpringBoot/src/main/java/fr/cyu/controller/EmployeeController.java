@@ -96,10 +96,8 @@ public class EmployeeController {
             ranks.add(Rank.fromValue(s));
         });
         e.setRanks(ranks);
-        es.update(e);
-        // BUG update works, but re updateing ranks or perms doesn't work :d
 
-        return JSONUtil.OK;
+        return es.update(e) ? JSONUtil.OK : JSONUtil.SERVER_ERROR;
     }
 
     @DeleteMapping(value = "/{id}")

@@ -47,7 +47,7 @@ public class EmployeeService {
     }
 
     public boolean update(Employee e) {
-        if (e == null || !getById(e.getId()).isEmpty()) {
+        if (e == null || getById(e.getId()).isEmpty()) {
             return false;
         }
         er.save(e);

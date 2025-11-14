@@ -22,9 +22,7 @@ public enum Permission {
     DELETE_PERMISSION("Peut effacer les permissions"),
 
     VIEW_REPORT("Peut générer un rapport"),
-    VIEW_PAYSLIP("Peut générer une feuille de paie"),
-
-    NONE("Aucune");
+    VIEW_PAYSLIP("Peut générer une feuille de paie");
 
     private String permission;
 
