@@ -35,10 +35,7 @@ public class EmployeeService {
     }
 
     public boolean deleteById(Integer id) {
-        if (id == null || id <= 0) {
-            return false;
-        }
-        if (getById(id).isEmpty()) {
+        if (id == null || id <= 0 || getById(id).isEmpty()) {
             return false;
         }
 

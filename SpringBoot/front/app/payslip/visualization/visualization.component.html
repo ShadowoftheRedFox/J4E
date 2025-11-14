@@ -1,0 +1,36 @@
+@if (employee_id === 0) {
+<p>Chargement...</p>
+} @else if (isNaN(employee_id)) {
+<p>Employé inconnu. <a routerLink="../">Retour à la liste des employés.</a></p>
+} @else {
+<h2>Liste des paies de {{employee?.firstName}} {{employee?.lastName}}:</h2>
+<div class="flex flex-row justify-between">
+    <mat-form-field>
+        <mat-label>Filtrer par date:</mat-label>
+        <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+            <input matStartDate formControlName="start" placeholder="Début">
+            <input matEndDate formControlName="end" placeholder="Fin">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker>
+            <mat-datepicker-actions>
+                <button matButton matDatepickerCancel>Annuler</button>
+                <button matButton="elevated" matDatepickerApply>Confirmer</button>
+            </mat-datepicker-actions>
+        </mat-date-range-picker>
+
+        @if (range.controls.start.hasError('matStartDateInvalid')) {
+        <mat-error>Date de début invalide</mat-error>
+        }
+        @if (range.controls.end.hasError('matEndDateInvalid')) {
+        <mat-error>Date de fin invalide</mat-error>
+        }
+    </mat-form-field>
+    <button mat-flat-button (click)="add()">Ajouter une nouvelle feuille</button>
+</div>
+<div>
+    @for (payslip of filteredPayslips; track $index) {
+    <div>#{{payslip.id}}</div>
+    }
+</div>
+}

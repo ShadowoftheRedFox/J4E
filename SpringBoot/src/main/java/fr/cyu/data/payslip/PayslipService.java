@@ -1,6 +1,9 @@
 package fr.cyu.data.payslip;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,5 +27,37 @@ public class PayslipService {
         }
 
         return Optional.of(pr.save(new Payslip(employee, hour, wage, bonus, malus, date)));
+    }
+
+    public Optional<Payslip> getById(Integer id) {
+        if (id == null || id <= 0) {
+            return Optional.empty();
+        }
+        return pr.findById(id);
+    }
+
+    public boolean deleteById(Integer id) {
+        if (id == null || id <= 0 || getById(id).isEmpty()) {
+            return false;
+        }
+        pr.deleteById(id);
+        return true;
+    }
+
+    public List<Payslip> getAllOfEmployee(Integer id) {
+        if (id == null || id <= 0) {
+            return List.of();
+        }
+
+        ArrayList<Payslip> ofEmployee = new ArrayList<>();
+        Iterator<Payslip> ite = getAll().iterator();
+        while (ite.hasNext()) {
+            Payslip p = ite.next();
+            if (p.getEmployee().getId().equals(id)) {
+                ofEmployee.add(p);
+            }
+        }
+
+        return Collections.unmodifiableList(ofEmployee);
     }
 }

@@ -7,6 +7,7 @@ import { DepartmentComponent } from './department/department.component';
 import { PayslipComponent } from './payslip/payslip.component';
 import { ReportComponent } from './report/report.component';
 import { AuthComponent } from './auth/auth.component';
+import { VisualizationComponent } from './payslip/visualization/visualization.component';
 
 const FormatedTitle = " - " + environment.TITLE;
 
@@ -35,6 +36,11 @@ export const routes: Routes = [
         title: "Paies" + environment.TITLE,
         path: "payslips",
         component: PayslipComponent
+    },
+    {
+        title: "Paies: visualisation" + environment.TITLE,
+        path: "payslips/:id",
+        component: VisualizationComponent
     },
     {
         title: "Rapport" + environment.TITLE,

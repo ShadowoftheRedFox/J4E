@@ -1,1 +1,46 @@
-<p>payslip works!</p>
+<div class="h-full relative">
+    <mat-form-field class="w-full">
+        <mat-label>Filtrer</mat-label>
+        <input matInput [formControl]="filterControl">
+    </mat-form-field>
+    <div class="h-full flex flex-col justify-between">
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> N° </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="username">
+                <th mat-header-cell *matHeaderCellDef> Utilisateur </th>
+                <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef> Prénom </th>
+                <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef> Nom </th>
+                <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-menu-item (click)="showPayslip(element.id)"
+                        class="flex gap-1 cursor-pointer"><mat-icon>visibility</mat-icon>Voir les
+                        paies</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+            aria-label="Sélectionnez d'une page d'employé">
+        </mat-paginator>
+    </div>
+</div>

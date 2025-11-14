@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-import { BaseResponse, Department, Employee, Project } from '../models/APIModels';
+import { BaseResponse, Department, Employee, Payslip, Project } from '../models/APIModels';
 
 const ApiUrl = environment.API_URL + ":" + environment.API_PORT + "/";
 
@@ -69,6 +69,27 @@ export class ApiService {
         delete: (id: number) => {
             return this.sendApiRequest<BaseResponse>("DELETE", "project/" + id, {}, "Deleting project " + id);
         },
+    }
+
+    readonly payslip = {
+        getAll: () => {
+            return this.sendApiRequest<Payslip[]>("GET", "payslip", {}, "Getting all payslips");
+        },
+        getAllOfEmployee: (employee_id: number) => {
+            return this.sendApiRequest<Payslip[]>("GET", "payslip/employee/" + employee_id, {}, "Getting payslips of employee " + employee_id);
+        },
+        get: (id: number) => {
+            return this.sendApiRequest<Payslip>("GET", "payslip/" + id, {}, "Getting payslip " + id);
+        },
+        update: (id: number, payslip: Payslip) => {
+            return this.sendApiRequest<BaseResponse>("PUT", "payslip/" + id, payslip, "Updating payslip " + id);
+        },
+        create: (payslip: Payslip) => {
+            return this.sendApiRequest<BaseResponse>("POST", "payslip", payslip, "Creating new payslip");
+        },
+        delete: (id: number) => {
+            return this.sendApiRequest<BaseResponse>("DELETE", "payslip/" + id, {}, "Deleting payslip " + id);
+        }
     }
 
     private sendApiRequest<T>(

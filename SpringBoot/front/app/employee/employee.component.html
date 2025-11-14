@@ -37,6 +37,12 @@
                     element.ranks.join(", ")}} </td>
             </ng-container>
 
+            <ng-container matColumnDef="permissions">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="permissions"> Permissions </th>
+                <td mat-cell *matCellDef="let element"> {{element.permissions.length === 0 ? "Aucune" :
+                    element.permissions.join(", ")}} </td>
+            </ng-container>
+
             <ng-container matColumnDef="department">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="department"> Département </th>
                 <td mat-cell *matCellDef="let element"> {{departments.get(element.department)}} </td>
