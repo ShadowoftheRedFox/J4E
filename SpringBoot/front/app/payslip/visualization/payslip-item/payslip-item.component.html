@@ -1,12 +1,14 @@
 <!-- TODO card style -->
 <div class="flex flex-col">
-    <p>#{{payslip.id}}: {{payslip.hour * payslip.wage + payslip.bonus - payslip.malus}}€</p>
+    <p>#{{payslip.id}} {{formatDate(payslip.date)}}: {{payslip.hour * payslip.wage + payslip.bonus - payslip.malus}}€
+    </p>
     <p>Heures: {{payslip.hour}}</p>
     <p>Salaires horaire: {{payslip.wage}}</p>
     <p>Bonus: {{payslip.bonus}}</p>
     <p>Malus: {{payslip.malus}}</p>
-    <div class="flex flex-row">
-        <button mat-raised-button (click)="edit.emit(payslip.id)" matPrefix><mat-icon>edit</mat-icon></button>
-        <button mat-raised-button (click)="delete.emit(payslip.id)" matPrefix><mat-icon>delete</mat-icon></button>
+    <div class="flex flex-col gap-2">
+        <button mat-raised-button (click)="edit.emit(payslip.id)" matPrefix><mat-icon>edit</mat-icon>Modifier</button>
+        <button mat-raised-button (click)="delete.emit(payslip.id)"
+            matPrefix><mat-icon>delete</mat-icon>Effacer</button>
     </div>
 </div>

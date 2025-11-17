@@ -3,6 +3,7 @@ import { Payslip } from '../../../../models/APIModels';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { toDate } from '../../../../models/date';
 
 @Component({
     selector: 'app-payslip-item',
@@ -18,4 +19,8 @@ export class PayslipItemComponent {
     @Input({ required: true }) payslip!: Payslip;
     @Output() edit = new EventEmitter<number>();
     @Output() delete = new EventEmitter<number>();
+
+    formatDate(date: number) {
+        return toDate(new Date(date).toDateString());
+    }
 }

@@ -1,5 +1,4 @@
 <form [formGroup]="formGroup" (ngSubmit)="submitForm()" class="flex flex-col items-stretch justify-center flex-nowrap">
-    <p>{{employee ? employee.firstName + " " + employee.lastName : "Nouveau" }}</p>
     <mat-form-field>
         <mat-label>Salaire</mat-label>
         <input matInput formControlName="wage">

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Employee, Payslip } from '../../../models/APIModels';
@@ -35,37 +35,36 @@ export class VisualizationComponent {
     private readonly popup = inject(PopupService);
     readonly dialog = inject(MatDialog);
 
-    employee_id = 0;
+    employee_id = signal(0);
     employee: Employee | null = null;
     allPayslips: Payslip[] = [];
     filteredPayslips: Payslip[] = [];
 
     constructor() {
         this.route.paramMap.subscribe(res => {
-            this.employee_id = Number(res.get("id"));
-            if (!this.isNaN(this.employee_id)) {
-                this.api.employee.get(this.employee_id).subscribe({
+            this.employee_id.set(Number(res.get("id")));
+            if (!isNaN(this.employee_id())) {
+                this.api.employee.get(this.employee_id()).subscribe({
                     next: (res) => {
                         this.employee = res;
+                        this.updatePayslips();
                     },
                     error: () => {
-                        this.employee_id = NaN;
+                        this.employee_id.set(-1);
                     }
                 })
             }
         });
 
-        this.updatePayslips();
 
         this.range.valueChanges.subscribe(res => {
             if (res.end == null || res.start == null) { return; }
             this.updateSelection(res.start, res.end);
         });
-
     }
 
     updatePayslips() {
-        this.api.payslip.getAllOfEmployee(this.employee_id).subscribe({
+        this.api.payslip.getAllOfEmployee(this.employee_id()).subscribe({
             next: (res) => {
                 this.allPayslips = res;
 
@@ -73,10 +72,6 @@ export class VisualizationComponent {
                 this.range.markAllAsDirty();
             }
         });
-    }
-
-    isNaN(n: number) {
-        return isNaN(n);
     }
 
     updateSelection(start: Date, end: Date) {

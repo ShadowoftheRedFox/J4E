@@ -1,6 +1,6 @@
-@if (employee_id === 0) {
+@if (employee_id() === 0) {
 <p>Chargement...</p>
-} @else if (isNaN(employee_id)) {
+} @else if (employee_id() === -1) {
 <p>Employé inconnu. <a routerLink="../">Retour à la liste des employés.</a></p>
 } @else {
 <h2>Liste des paies de {{employee?.firstName}} {{employee?.lastName}}:</h2>
