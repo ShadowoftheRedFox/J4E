@@ -56,11 +56,10 @@ public class PayslipController {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
 
-        return JSONUtil.NOT_YET_IMPLEMENTED;
-        // boolean res = ps.add(dto.getUsername(), dto.getPassword(),
-        // dto.getFirstName(), dto.getLastName(),
-        // ds.getById(dto.getDepartment()).orElse(null)).isPresent();
-        // return res ? JSONUtil.OK : JSONUtil.BAD_REQUEST_ERROR;
+        boolean res = ps.add(es.getById(dto.getEmployee()).orElse(null), dto.getHour(), dto.getWage(), dto.getBonus(),
+                dto.getMalus(), dto.getDate()).isPresent();
+
+        return res ? JSONUtil.OK : JSONUtil.NOT_YET_IMPLEMENTED;
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

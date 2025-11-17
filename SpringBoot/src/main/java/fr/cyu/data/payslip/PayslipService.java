@@ -22,7 +22,10 @@ public class PayslipService {
     }
 
     public Optional<Payslip> add(Employee employee, float hour, float wage, float bonus, float malus, Date date) {
-        if (employee == null || hour <= 0 || wage <= 0 || bonus <= 0 || malus <= 0 || date == null) {
+
+        System.out.println(employee);
+        System.out.println(date);
+        if (employee == null || hour < 0 || wage < 0 || bonus < 0 || malus < 0 || date == null) {
             return Optional.empty();
         }
 
@@ -40,6 +43,8 @@ public class PayslipService {
         if (id == null || id <= 0 || getById(id).isEmpty()) {
             return false;
         }
+
+        // FIXME error foreign constraint
         pr.deleteById(id);
         return true;
     }

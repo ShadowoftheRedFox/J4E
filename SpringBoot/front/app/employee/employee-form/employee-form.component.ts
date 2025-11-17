@@ -166,7 +166,7 @@ export class EmployeeFormComponent implements OnChanges {
                 }
             });
         } else {
-            this.api.employee.update(this.employee.id, {
+            this.api.employee.update({
                 id: this.employee.id,
                 username: this.formGroup.value.username as string,
                 firstName: this.formGroup.value.firstName as string,

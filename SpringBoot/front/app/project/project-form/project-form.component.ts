@@ -92,7 +92,7 @@ export class ProjectFormComponent implements OnChanges {
                 }
             });
         } else {
-            this.api.project.update(this.project.id, {
+            this.api.project.update({
                 id: this.project.id,
                 name: this.formGroup.value.name as string,
                 status: this.formGroup.value.status as ProjectStatus,

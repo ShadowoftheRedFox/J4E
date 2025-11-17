@@ -176,7 +176,6 @@ export class EmployeeComponent implements AfterViewInit {
             }
         });
         ref.afterClosed().subscribe(res => {
-            console.warn(res);
             if (res) {
                 this.updateEmployees();
             }

@@ -11,7 +11,7 @@
             <input matStartDate formControlName="start" placeholder="Début">
             <input matEndDate formControlName="end" placeholder="Fin">
         </mat-date-range-input>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
         <mat-date-range-picker #picker>
             <mat-datepicker-actions>
                 <button matButton matDatepickerCancel>Annuler</button>
@@ -28,9 +28,23 @@
     </mat-form-field>
     <button mat-flat-button (click)="add()">Ajouter une nouvelle feuille</button>
 </div>
-<div>
+<div class="flex flex-row flex-wrap gap-8">
+    @if (range.value.end !== null && range.value.start !== null) {
+    @if (filteredPayslips.length === 0) {
+    <p>Aucune paies ne correspond à critères recherchés.</p>
+    } @else {
     @for (payslip of filteredPayslips; track $index) {
-    <div>#{{payslip.id}}</div>
+    <app-payslip-item [payslip]="payslip" (edit)="edit($event)" (delete)="delete($event)" />
+    }
+    }
+    }@else {
+    @if (allPayslips.length === 0) {
+    <p>Il n'y a aucune paies pour le moment.</p>
+    } @else {
+    @for (payslip of allPayslips; track $index) {
+    <app-payslip-item [payslip]="payslip" (edit)="edit($event)" (delete)="delete($event)" />
+    }
+    }
     }
 </div>
 }

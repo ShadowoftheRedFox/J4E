@@ -3,6 +3,9 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatButton } from '@angular/material/button';
 import { NgComponentOutlet, NgStyle } from '@angular/common';
 import { EmployeeFormComponent } from '../../app/employee/employee-form/employee-form.component';
+import { DepartmentFormComponent } from "../../app/department/department-form/department-form.component";
+import { PayslipFormComponent } from '../../app/payslip/payslip-form/payslip-form.component';
+import { ProjectFormComponent } from '../../app/project/project-form/project-form.component';
 
 export interface DialogDataType {
     btnOk?: string;
@@ -24,7 +27,10 @@ export interface DialogDataType {
         NgComponentOutlet,
         NgStyle,
         MatButton,
-        EmployeeFormComponent
+        EmployeeFormComponent,
+        DepartmentFormComponent,
+        PayslipFormComponent,
+        ProjectFormComponent
     ],
     templateUrl: './dialog.component.html',
     styleUrl: './dialog.component.scss'
@@ -34,6 +40,9 @@ export class DialogComponent {
     private dialogRef = inject(MatDialogRef<DialogComponent, unknown>);
 
     readonly EmployeeForm = EmployeeFormComponent;
+    readonly PayslipForm = PayslipFormComponent;
+    readonly DepartmentForm = DepartmentFormComponent;
+    readonly ProjectForm = ProjectFormComponent;
 
     constructor() {
         if (!this.data) this.data = {};

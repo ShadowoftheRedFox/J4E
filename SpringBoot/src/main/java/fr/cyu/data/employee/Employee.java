@@ -3,7 +3,6 @@ package fr.cyu.data.employee;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -55,7 +54,7 @@ public class Employee {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", nullable = false)
     @JsonBackReference // prevent reference chain when serializing
-    @JsonAlias({ "departmentId" }) // TODO doesn't appear on front, another root to prevent references
+    // custom serializer with /utils/EmployeeModule
     private Department department;
 
     public Employee() {

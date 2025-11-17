@@ -7,6 +7,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from "@angular/material/datepicker"
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent, DialogDataType } from '../../../shared/dialog/dialog.component';
+import { PayslipFormComponent } from '../payslip-form/payslip-form.component';
+import { PopupService } from '../../../services/popup.service';
+import { PayslipItemComponent } from "./payslip-item/payslip-item.component";
 
 @Component({
     selector: 'app-visualization',
@@ -17,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
         FormsModule,
         ReactiveFormsModule,
         MatButtonModule,
+        PayslipItemComponent
     ],
     templateUrl: './visualization.component.html',
     styleUrl: './visualization.component.scss',
@@ -26,6 +32,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class VisualizationComponent {
     private readonly api = inject(ApiService);
     private readonly route = inject(ActivatedRoute);
+    private readonly popup = inject(PopupService);
+    readonly dialog = inject(MatDialog);
 
     employee_id = 0;
     employee: Employee | null = null;
@@ -47,12 +55,24 @@ export class VisualizationComponent {
             }
         });
 
-        this.api.payslip.getAllOfEmployee(this.employee_id).subscribe({ next: (res) => { this.allPayslips = res; } });
+        this.updatePayslips();
 
         this.range.valueChanges.subscribe(res => {
             if (res.end == null || res.start == null) { return; }
             this.updateSelection(res.start, res.end);
-        })
+        });
+
+    }
+
+    updatePayslips() {
+        this.api.payslip.getAllOfEmployee(this.employee_id).subscribe({
+            next: (res) => {
+                this.allPayslips = res;
+
+                this.range.markAllAsTouched();
+                this.range.markAllAsDirty();
+            }
+        });
     }
 
     isNaN(n: number) {
@@ -62,7 +82,7 @@ export class VisualizationComponent {
     updateSelection(start: Date, end: Date) {
         this.filteredPayslips = [];
         this.allPayslips.forEach(p => {
-            if (p.date.getTime() >= start.getTime() && p.date.getTime() <= end.getTime()) {
+            if (p.date >= start.getTime() && p.date <= end.getTime()) {
                 this.filteredPayslips.push(p);
             }
         });
@@ -74,6 +94,73 @@ export class VisualizationComponent {
     });
 
     add() {
-        //TODO
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                component: PayslipFormComponent,
+                title: "Création d'une paie",
+                data: { payslip: null, employeeId: this.employee_id },
+                btnNotOk: ""
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res) {
+                this.updatePayslips();
+            }
+        });
+    }
+
+    edit(id: number) {
+        const p = this.allPayslips.find(v => v.id == id);
+        if (p == undefined) {
+            this.popup.openSnackBar({ message: "Paie inconnue" });
+            return;
+        }
+
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                component: PayslipFormComponent,
+                title: "Modification d'une paie",
+                data: { payslip: p, employeeId: this.employee_id },
+                btnNotOk: ""
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            console.log(res);
+            if (res) {
+                this.updatePayslips();
+            }
+        });
+    }
+
+    delete(id: number) {
+        const p = this.allPayslips.find(v => v.id == id);
+        if (p == undefined) {
+            this.popup.openSnackBar({ message: "Paie inconnue" });
+            return;
+        }
+
+        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+            data: {
+                title: "Suppression de la paie " + p.id + " de " + this.employee?.firstName + " " + this.employee?.lastName,
+                btnNotOk: "Annuler",
+                btnOk: "Effacer",
+                warn: true,
+                text: "Êtes vous sur de vouloir effacer cet feuille de paie?"
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            console.log(res);
+            if (res) {
+                this.api.payslip.delete(id).subscribe({
+                    next: () => {
+                        this.popup.openSnackBar({ message: "Paie effacée" });
+                        this.updatePayslips();
+                    },
+                    error: () => {
+                        this.popup.openSnackBar({ message: "Échec de l'interaction" });
+                    }
+                });
+            }
+        });
     }
 }

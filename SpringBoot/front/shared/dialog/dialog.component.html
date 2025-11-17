@@ -6,6 +6,13 @@
         }
         @if (data.component === EmployeeForm) {
         <app-employee-form [employee]="data.data.employee" (out)="getOuput($event, true)" />
+        } @else if (data.component === DepartmentForm) {
+        <app-department-form [department]="data.data.department" (out)="getOuput($event, true)" />
+        } @else if (data.component === PayslipForm) {
+        <app-payslip-form [payslip]="data.data.payslip" [employeeId]="data.data.employeeId"
+            (out)="getOuput($event, true)" />
+        } @else if (data.component === ProjectForm) {
+        <app-project-form [project]="data.data.project" (out)="getOuput($event, true)" />
         } @else if (data.component) {
         <ng-container *ngComponentOutlet="data.component; inputs: data.data;" />
         }

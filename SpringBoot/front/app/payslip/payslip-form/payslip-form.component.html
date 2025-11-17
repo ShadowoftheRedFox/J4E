@@ -1,0 +1,48 @@
+<form [formGroup]="formGroup" (ngSubmit)="submitForm()" class="flex flex-col items-stretch justify-center flex-nowrap">
+    <p>{{employee ? employee.firstName + " " + employee.lastName : "Nouveau" }}</p>
+    <mat-form-field>
+        <mat-label>Salaire</mat-label>
+        <input matInput formControlName="wage">
+        @if (formGroup.controls["wage"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["wage"])}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Nombre d'heures travaillées</mat-label>
+        <input matInput formControlName="hour">
+        @if (formGroup.controls["hour"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["hour"])}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Bonus</mat-label>
+        <input matInput formControlName="bonus">
+        @if (formGroup.controls["bonus"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["bonus"])}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Malus</mat-label>
+        <input matInput formControlName="malus">
+        @if (formGroup.controls["malus"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["malus"])}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Date</mat-label>
+        <input [matDatepicker]="picker" matInput formControlName="date">
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
+        <mat-datepicker #picker>
+            <!-- TODO show only the month and year -->
+            <mat-datepicker-actions>
+                <button matButton matDatepickerCancel>Annuler</button>
+                <button matButton="elevated" matDatepickerApply>Confirmer</button>
+            </mat-datepicker-actions>
+        </mat-datepicker>
+        @if (formGroup.controls["date"].invalid) {
+        <mat-error>{{genericError(formGroup.controls["date"])}}</mat-error>
+        }
+    </mat-form-field>
+
+    <button mat-flat-button type="submit" [disabled]="formGroup.invalid">{{payslip ? "Modifier" : "Ajouter"}}</button>
+</form>

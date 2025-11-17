@@ -100,7 +100,7 @@ export class DepartmentFormComponent implements OnChanges {
                 }
             });
         } else {
-            this.api.department.update(this.department.id, {
+            this.api.department.update({
                 id: this.department.id,
                 name: this.formGroup.value.name as string,
                 employees: []

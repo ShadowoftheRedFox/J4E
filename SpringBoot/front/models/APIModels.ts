@@ -71,10 +71,10 @@ export interface Project {
 
 export interface Payslip {
     id: number,
-    employee: Employee,
+    employee: number,
     hour: number,
     wage: number,
     bonus: number,
     malus: number,
-    date: Date,
+    date: number,
 }

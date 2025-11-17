@@ -27,8 +27,8 @@ export class ApiService {
         create: (employee: Employee) => {
             return this.sendApiRequest<BaseResponse>("POST", "employee", employee, "Creating new employee");
         },
-        update: (id: number, employee: Employee) => {
-            return this.sendApiRequest<BaseResponse>("PUT", "employee/" + id, employee, "Updating employee " + id);
+        update: (employee: Employee) => {
+            return this.sendApiRequest<BaseResponse>("PUT", "employee/" + employee.id, employee, "Updating employee " + employee.id);
         },
         delete: (id: number) => {
             return this.sendApiRequest<BaseResponse>("DELETE", "employee/" + id, {}, "Deleting employee" + id);
@@ -45,8 +45,8 @@ export class ApiService {
         create: (department: Department) => {
             return this.sendApiRequest<BaseResponse>("POST", "department", department, "Creating new department");
         },
-        update: (id: number, department: Department) => {
-            return this.sendApiRequest<BaseResponse>("PUT", "department/" + id, department, "Updating department " + id);
+        update: (department: Department) => {
+            return this.sendApiRequest<BaseResponse>("PUT", "department/" + department.id, department, "Updating department " + department.id);
         },
         delete: (id: number) => {
             return this.sendApiRequest<BaseResponse>("DELETE", "department/" + id, {}, "Deleting department " + id);
@@ -63,8 +63,8 @@ export class ApiService {
         create: (project: Project) => {
             return this.sendApiRequest<BaseResponse>("POST", "project", project, "Creating new project");
         },
-        update: (id: number, project: Project) => {
-            return this.sendApiRequest<BaseResponse>("PUT", "project/" + id + "/edit", project, "Updating project " + id);
+        update: (project: Project) => {
+            return this.sendApiRequest<BaseResponse>("PUT", "project/" + project.id + "/edit", project, "Updating project " + project.id);
         },
         delete: (id: number) => {
             return this.sendApiRequest<BaseResponse>("DELETE", "project/" + id, {}, "Deleting project " + id);
@@ -81,10 +81,10 @@ export class ApiService {
         get: (id: number) => {
             return this.sendApiRequest<Payslip>("GET", "payslip/" + id, {}, "Getting payslip " + id);
         },
-        update: (id: number, payslip: Payslip) => {
-            return this.sendApiRequest<BaseResponse>("PUT", "payslip/" + id, payslip, "Updating payslip " + id);
+        update: (payslip: Payslip) => {
+            return this.sendApiRequest<BaseResponse>("PUT", "payslip/" + payslip.id, payslip, "Updating payslip " + payslip.id);
         },
-        create: (payslip: Payslip) => {
+        create: (payslip: Partial<Payslip>) => {
             return this.sendApiRequest<BaseResponse>("POST", "payslip", payslip, "Creating new payslip");
         },
         delete: (id: number) => {
