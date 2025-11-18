@@ -60,12 +60,15 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String username, String password, String first, String last, Department d) {
+    public Employee(String username, String password, String first, String last, Department d, Set<Rank> ranks,
+            Set<Permission> permissions) {
         setUsername(username);
         setPassword(password);
         setFirstName(first);
         setLastName(last);
         setDepartment(d);
+        setRanks(ranks);
+        setPermissions(permissions);
     }
 
     /**

@@ -29,22 +29,16 @@
     <button mat-flat-button (click)="add()">Ajouter une nouvelle feuille</button>
 </div>
 <div class="flex flex-row flex-wrap gap-8">
+    @if (filteredPayslips.length !== 0) {
     @if (range.value.end !== null && range.value.start !== null) {
-    @if (filteredPayslips.length === 0) {
     <p>Aucune paies ne correspond à critères recherchés.</p>
     } @else {
-    @for (payslip of filteredPayslips; track $index) {
-    <app-payslip-item [payslip]="payslip" (edit)="edit($event)" (delete)="delete($event)" />
+    @for (payslip of ploof(); track $index) {
+    <app-payslip-item [payslip]="payslip" (edit)="edit($event)" (delete)="delete($event)" (print)="print($event)" />
     }
     }
-    }@else {
-    @if (allPayslips.length === 0) {
-    <p>Il n'y a aucune paies pour le moment.</p>
     } @else {
-    @for (payslip of allPayslips; track $index) {
-    <app-payslip-item [payslip]="payslip" (edit)="edit($event)" (delete)="delete($event)" />
-    }
-    }
+    <p>Il n'y a aucune paies pour le moment.</p>
     }
 </div>
 }

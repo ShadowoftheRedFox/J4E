@@ -2,6 +2,7 @@ package fr.cyu.data.employee;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,15 @@ public class EmployeeService {
         return er.findAll();
     }
 
-    public Optional<Employee> add(String username, String password, String first, String last, Department d) {
-        if (username == null || password == null || first == null || first == null || last == null || username.isBlank()
-                || password.isBlank() || first.isBlank() || first.isBlank() || last.isBlank() || d == null) {
+    public Optional<Employee> add(String username, String password, String first, String last, Department d,
+            Set<Rank> ranks, Set<Permission> permissions) {
+        if (username == null || password == null || first == null || first == null || last == null || d == null
+                || username.isBlank() || ranks == null || permissions == null
+                || password.isBlank() || first.isBlank() || first.isBlank() || last.isBlank() || ranks.isEmpty()) {
             return Optional.empty();
         }
 
-        return Optional.of(er.save(new Employee(username, password, first, last, d)));
+        return Optional.of(er.save(new Employee(username, password, first, last, d, ranks, permissions)));
     }
 
     public Optional<Employee> getById(Integer id) {

@@ -30,8 +30,8 @@
     <div class="flex flex-col">
         <mat-label>Rôle</mat-label>
         @for (rank of ranks; track rank) {
-        <mat-checkbox (change)="changeRank(rank, $event.checked)"
-            [checked]="employee?.ranks?.includes(rank)">{{rank}}</mat-checkbox>
+        <mat-checkbox (change)="changeRank(rank, $event.checked)" [checked]="employee?.ranks?.includes(rank)"
+            [disabled]="(rank === 'JUNIOR' && ranksCtrl.value.includes('SENIOR')) || (rank === 'SENIOR' && ranksCtrl.value.includes('JUNIOR'))">{{rank}}</mat-checkbox>
         }
         @if (ranksCtrl.invalid) {
         <mat-error>{{genericError(ranksCtrl)}}</mat-error>

@@ -3,7 +3,6 @@ package fr.cyu.data.payslip;
 import java.sql.Date;
 
 import fr.cyu.data.employee.Employee;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +19,7 @@ public class Payslip {
     private Integer id;
 
     @NotNull
-    @ManyToOne(optional = false, targetEntity = Employee.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, targetEntity = Employee.class, fetch = FetchType.EAGER)
     private Employee employee;
 
     @NotNull

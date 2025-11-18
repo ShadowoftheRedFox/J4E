@@ -12,6 +12,7 @@ import fr.cyu.data.department.DepartmentRepository;
 import fr.cyu.data.employee.Employee;
 import fr.cyu.data.employee.EmployeeRepository;
 import fr.cyu.data.employee.Permission;
+import fr.cyu.data.employee.Rank;
 
 @Component
 public class AppSetup implements CommandLineRunner {
@@ -30,8 +31,11 @@ public class AppSetup implements CommandLineRunner {
                 .orElseGet(() -> dr.save(new Department("Administration")));
 
         // get admin employee, or create it
+        HashSet<Rank> ranks = new HashSet<>();
+        ranks.add(Rank.ADMIN);
         Employee admin = er.findByUsername("admin")
-                .orElseGet(() -> er.save(new Employee("admin", "admin", "admin", "admin", administration)));
+                .orElseGet(() -> er.save(new Employee("admin", "admin", "admin", "admin", administration, ranks,
+                        new HashSet<Permission>())));
 
         if (admin.getPermissions().size() != Permission.values().length) {
             admin.setPermissions(new HashSet<Permission>(Arrays.asList(Permission.values())));

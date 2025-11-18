@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Employee, Payslip } from '../../../models/APIModels';
@@ -39,6 +39,7 @@ export class VisualizationComponent {
     employee: Employee | null = null;
     allPayslips: Payslip[] = [];
     filteredPayslips: Payslip[] = [];
+    ploof: WritableSignal<Payslip[]> = signal([]);
 
     constructor() {
         this.route.paramMap.subscribe(res => {
@@ -56,10 +57,8 @@ export class VisualizationComponent {
             }
         });
 
-
         this.range.valueChanges.subscribe(res => {
-            if (res.end == null || res.start == null) { return; }
-            this.updateSelection(res.start, res.end);
+            this.updateSelection(res.start || null, res.end || null);
         });
     }
 
@@ -67,20 +66,24 @@ export class VisualizationComponent {
         this.api.payslip.getAllOfEmployee(this.employee_id()).subscribe({
             next: (res) => {
                 this.allPayslips = res;
-
-                this.range.markAllAsTouched();
-                this.range.markAllAsDirty();
+                this.updateSelection(null, null);
             }
         });
     }
 
-    updateSelection(start: Date, end: Date) {
-        this.filteredPayslips = [];
-        this.allPayslips.forEach(p => {
-            if (p.date >= start.getTime() && p.date <= end.getTime()) {
-                this.filteredPayslips.push(p);
-            }
-        });
+    updateSelection(start: Date | null, end: Date | null) {
+        if (end == null || start == null) {
+            this.filteredPayslips = this.allPayslips;
+        } else {
+            this.filteredPayslips = [];
+            this.allPayslips.forEach(p => {
+                if (p.date >= start.getTime() && p.date <= end.getTime()) {
+                    this.filteredPayslips.push(p);
+                }
+            });
+        }
+
+        this.ploof.set(this.filteredPayslips);
     }
 
     readonly range = new FormGroup({
@@ -93,7 +96,7 @@ export class VisualizationComponent {
             data: {
                 component: PayslipFormComponent,
                 title: "Création d'une paie",
-                data: { payslip: null, employeeId: this.employee_id },
+                data: { payslip: null, employeeId: this.employee_id() },
                 btnNotOk: ""
             }
         });
@@ -157,5 +160,9 @@ export class VisualizationComponent {
                 });
             }
         });
+    }
+
+    print(p: Payslip) {
+        console.log(p);
     }
 }

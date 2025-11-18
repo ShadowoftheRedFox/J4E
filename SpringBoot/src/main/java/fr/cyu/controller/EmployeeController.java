@@ -47,8 +47,18 @@ public class EmployeeController {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
+
+        HashSet<Permission> permissions = new HashSet<>();
+        dto.getPermissions().forEach(s -> {
+            permissions.add(Permission.fromValue(s));
+        });
+        HashSet<Rank> ranks = new HashSet<>();
+        dto.getRanks().forEach(s -> {
+            ranks.add(Rank.fromValue(s));
+        });
+
         boolean res = es.add(dto.getUsername(), dto.getPassword(), dto.getFirstName(), dto.getLastName(),
-                ds.getById(dto.getDepartment()).orElse(null)).isPresent();
+                ds.getById(dto.getDepartment()).orElse(null), ranks, permissions).isPresent();
         return res ? JSONUtil.OK : JSONUtil.BAD_REQUEST_ERROR;
     }
 

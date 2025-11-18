@@ -168,9 +168,9 @@ export class EmployeeFormComponent implements OnChanges {
         } else {
             this.api.employee.update({
                 id: this.employee.id,
-                username: this.formGroup.value.username as string,
-                firstName: this.formGroup.value.firstName as string,
-                lastName: this.formGroup.value.lastName as string,
+                username: this.formGroup.value.username || this.employee.username as string,
+                firstName: this.formGroup.value.firstName || this.employee.firstName as string,
+                lastName: this.formGroup.value.lastName || this.employee.lastName as string,
                 ranks: this.ranksCtrl.value,
                 permissions: this.permissionsCtrl.value,
                 department: this.formGroup.value.department as number,
