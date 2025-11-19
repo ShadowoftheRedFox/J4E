@@ -12,7 +12,7 @@
     </error-page>
     <listener>
         <listener-class>fr.cyu.jee.HibernateSetup</listener-class>
-    </listener>
+    </listener>s
     <filter>
         <filter-name>JspFilter</filter-name>
         <filter-class>fr.cyu.jee.JspFilter</filter-class>

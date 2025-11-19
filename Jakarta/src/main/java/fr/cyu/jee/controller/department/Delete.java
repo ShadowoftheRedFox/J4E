@@ -2,7 +2,11 @@ package fr.cyu.jee.controller.department;
 
 import java.io.IOException;
 
+import fr.cyu.jee.HibernateUtil;
+import fr.cyu.jee.beans.Department;
+import fr.cyu.jee.beans.User;
 import fr.cyu.jee.dao.DepartmentDAO;
+import fr.cyu.jee.dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -32,6 +36,24 @@ public class Delete extends HttpServlet {
 
         DepartmentDAO ddao = new DepartmentDAO();
         ddao.delete(id);
+        UserDAO udao = new UserDAO();
+        User user= new User();
+        Department departement = new Department();
+        for(int i=0; i<udao.getAll().size();i++){
+            
+            if(udao.getAll().isEmpty()){
+                continue;
+            }
+            if (ddao.get(id)== user.getDepartment() && udao.getAll().get(i).getDepartment().getId() == id){
+                user.setDepartment(ddao.get(1));
+                
+            }
+            else{
+                req.setAttribute("error","Requête échoué");
+                resp.sendRedirect(req.getContextPath() +"/department");
+            }
+        }
+        
         doGet(req, resp);
     }
 }
