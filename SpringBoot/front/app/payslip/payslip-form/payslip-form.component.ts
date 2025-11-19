@@ -128,7 +128,7 @@ export class PayslipFormComponent implements OnChanges {
         } else {
             this.api.payslip.update({
                 id: this.payslip.id,
-                employee: this.employeeId,
+                employee: this.payslip.employee,
                 hour: this.formGroup.value.hour as number,
                 wage: this.formGroup.value.wage as number,
                 bonus: this.formGroup.value.bonus as number,

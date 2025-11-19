@@ -30,7 +30,7 @@
 </div>
 <div class="flex flex-row flex-wrap gap-8">
     @if (filteredPayslips.length !== 0) {
-    @if (range.value.end !== null && range.value.start !== null) {
+    @if (range.value.end === null && range.value.start === null) {
     <p>Aucune paies ne correspond à critères recherchés.</p>
     } @else {
     @for (payslip of ploof(); track $index) {

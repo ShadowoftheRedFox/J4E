@@ -44,7 +44,6 @@ public class PayslipService {
             return false;
         }
 
-        // FIXME error foreign constraint
         pr.deleteById(id);
         return true;
     }
@@ -64,5 +63,13 @@ public class PayslipService {
         }
 
         return Collections.unmodifiableList(ofEmployee);
+    }
+
+    public boolean update(Payslip p) {
+        if (p == null || getById(p.getId()).isEmpty()) {
+            return false;
+        }
+        pr.save(p);
+        return true;
     }
 }

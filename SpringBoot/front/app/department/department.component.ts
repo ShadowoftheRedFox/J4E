@@ -16,7 +16,7 @@ import { PopupService } from '../../services/popup.service';
 import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
 import { DepartmentFormComponent } from './department-form/department-form.component';
 
-type Columns = "id" | "name" /*| "employees "*/ | "action";
+type Columns = "id" | "name" | "employees" | "action";
 
 @Injectable()
 export class CustomPaginatorIntl implements MatPaginatorIntl {
@@ -63,7 +63,7 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
 
 })
 export class DepartmentComponent implements AfterViewInit {
-    readonly displayedColumns: Columns[] = ['id', 'name', 'action'];
+    readonly displayedColumns: Columns[] = ['id', 'name', 'employees', 'action'];
 
     private readonly api = inject(ApiService);
     private readonly popup = inject(PopupService);
@@ -214,5 +214,15 @@ export class DepartmentComponent implements AfterViewInit {
                 });
             }
         });
+    }
+
+    editEmployees(id: number) {
+        const p = this.allDepartments.find(v => v.id == id);
+        if (p == undefined) {
+            this.popup.openSnackBar({ message: "Département inconnu" });
+            return;
+        }
+
+
     }
 }

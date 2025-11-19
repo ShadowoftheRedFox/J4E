@@ -81,12 +81,18 @@ public class PayslipController {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
 
-        Payslip e = ps.getById(id).orElse(null);
-        if (e == null) {
+        Payslip p = ps.getById(id).orElse(null);
+        if (p == null) {
             return JSONUtil.NOT_FOUND_ERROR;
         }
 
-        return JSONUtil.NOT_YET_IMPLEMENTED;
+        p.setBonus(dto.getBonus());
+        p.setDate(dto.getDate());
+        p.setHour(dto.getHour());
+        p.setMalus(dto.getMalus());
+        p.setWage(dto.getWage());
+
+        return ps.update(p) ? JSONUtil.OK : JSONUtil.SERVER_ERROR;
     }
 
     @DeleteMapping(value = "/{id}")

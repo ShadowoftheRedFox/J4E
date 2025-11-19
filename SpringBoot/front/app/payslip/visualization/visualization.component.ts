@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal, WritableSignal } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Employee, Payslip } from '../../../models/APIModels';
@@ -33,7 +33,8 @@ export class VisualizationComponent {
     private readonly api = inject(ApiService);
     private readonly route = inject(ActivatedRoute);
     private readonly popup = inject(PopupService);
-    readonly dialog = inject(MatDialog);
+    private readonly dialog = inject(MatDialog);
+    private readonly ref = inject(ChangeDetectorRef);
 
     employee_id = signal(0);
     employee: Employee | null = null;
@@ -75,15 +76,10 @@ export class VisualizationComponent {
         if (end == null || start == null) {
             this.filteredPayslips = this.allPayslips;
         } else {
-            this.filteredPayslips = [];
-            this.allPayslips.forEach(p => {
-                if (p.date >= start.getTime() && p.date <= end.getTime()) {
-                    this.filteredPayslips.push(p);
-                }
-            });
+            this.filteredPayslips = this.allPayslips.filter(p => p.date >= start.getTime() && p.date <= end.getTime());
         }
-
         this.ploof.set(this.filteredPayslips);
+        this.ref.detectChanges();
     }
 
     readonly range = new FormGroup({
