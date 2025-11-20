@@ -16,6 +16,7 @@ import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.comp
 import { EmployeeFormComponent } from './employee-form/employee-form.component';
 import { PopupService } from '../../services/popup.service';
 import { AuthService } from '../../services/auth.service';
+import { MatSelectModule } from '@angular/material/select';
 
 type Columns = "id" | "firstName" | "lastName" | "username" | "action" | "department" | "ranks" | "permissions";
 
@@ -56,7 +57,8 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
         MatMenuModule,
         ReactiveFormsModule,
         MatFormFieldModule,
-        MatInputModule
+        MatInputModule,
+        MatSelectModule,
     ],
     templateUrl: './employee.component.html',
     styleUrl: './employee.component.scss',
@@ -78,6 +80,7 @@ export class EmployeeComponent implements AfterViewInit {
     dataSource = new MatTableDataSource<Employee>([]);
 
     filterControl = new FormControl("");
+    departmentControl = new FormControl("");
 
     ownId = this.auth.user?.id || 0;
 
@@ -112,6 +115,22 @@ export class EmployeeComponent implements AfterViewInit {
                     u.lastName.includes(c) ||
                     u.username.includes(c)
                 ) {
+                    this.filteredEmployees.push(u);
+                }
+            });
+            this.sortedEmployees = this.filteredEmployees;
+            this.dataSource.data = this.filteredEmployees;
+        });
+
+        this.departmentControl.valueChanges.subscribe((c) => {
+            if (!c || c.length == 0) {
+                this.dataSource.data = this.allEmployees;
+                return;
+            }
+            // TODO combine with text filter
+            this.filteredEmployees = [];
+            this.allEmployees.forEach(u => {
+                if (c === this.departments.get(u.department)) {
                     this.filteredEmployees.push(u);
                 }
             });

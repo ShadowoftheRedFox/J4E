@@ -18,37 +18,37 @@ export const routes: Routes = [
         component: MainComponent
     },
     {
-        title: "Employés" + environment.TITLE,
+        title: "Employés" + FormatedTitle,
         path: "employees",
         component: EmployeeComponent
     },
     {
-        title: "Projets" + environment.TITLE,
+        title: "Projets" + FormatedTitle,
         path: "projects",
         component: ProjectComponent
     },
     {
-        title: "Départements" + environment.TITLE,
+        title: "Départements" + FormatedTitle,
         path: "departments",
         component: DepartmentComponent
     },
     {
-        title: "Paies" + environment.TITLE,
+        title: "Paies" + FormatedTitle,
         path: "payslips",
         component: PayslipComponent
     },
     {
-        title: "Paies: visualisation" + environment.TITLE,
+        title: "Paies: visualisation" + FormatedTitle,
         path: "payslips/:id",
         component: VisualizationComponent
     },
     {
-        title: "Rapport" + environment.TITLE,
+        title: "Rapport" + FormatedTitle,
         path: "report",
         component: ReportComponent
     },
     {
-        title: "Authentification" + environment.TITLE,
+        title: "Authentification" + FormatedTitle,
         path: "auth",
         component: AuthComponent
     },

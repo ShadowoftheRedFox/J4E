@@ -29,4 +29,12 @@ public class DepartmentService {
         }
         return dr.findById(id);
     }
+
+    public boolean update(Department d) {
+        if (d == null || getById(d.getId()).isEmpty()) {
+            return false;
+        }
+        dr.save(d);
+        return true;
+    }
 }

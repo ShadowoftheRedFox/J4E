@@ -177,7 +177,7 @@ export class ProjectComponent implements AfterViewInit {
         const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
             data: {
                 component: ProjectFormComponent,
-                data: { employee: e },
+                data: { project: e },
                 title: "Modification de " + e.name,
                 btnNotOk: ""
             }
@@ -207,7 +207,7 @@ export class ProjectComponent implements AfterViewInit {
         });
         ref.afterClosed().subscribe(res => {
             if (res) {
-                this.api.employee.delete(id).subscribe({
+                this.api.project.delete(id).subscribe({
                     next: () => {
                         this.popup.openSnackBar({ message: "Projet effacé" });
                         this.updateProjects();

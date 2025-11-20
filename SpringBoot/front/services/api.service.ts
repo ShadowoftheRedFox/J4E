@@ -64,7 +64,7 @@ export class ApiService {
             return this.sendApiRequest<BaseResponse>("POST", "project", project, "Creating new project");
         },
         update: (project: Project) => {
-            return this.sendApiRequest<BaseResponse>("PUT", "project/" + project.id + "/edit", project, "Updating project " + project.id);
+            return this.sendApiRequest<BaseResponse>("PUT", "project/" + project.id, project, "Updating project " + project.id);
         },
         delete: (id: number) => {
             return this.sendApiRequest<BaseResponse>("DELETE", "project/" + id, {}, "Deleting project " + id);

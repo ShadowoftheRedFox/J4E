@@ -28,4 +28,21 @@ public class ProjectService {
         }
         return pr.findById(id);
     }
+
+    public boolean deleteById(Integer id) {
+        if (id == null || id <= 0 || getById(id).isEmpty()) {
+            return false;
+        }
+
+        pr.deleteById(id);
+        return true;
+    }
+
+    public boolean update(Project p) {
+        if (p == null || getById(p.getId()).isEmpty()) {
+            return false;
+        }
+        pr.save(p);
+        return true;
+    }
 }

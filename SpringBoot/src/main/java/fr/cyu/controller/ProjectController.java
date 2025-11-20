@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +62,24 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
-        return JSONUtil.NOT_YET_IMPLEMENTED;
+        Project p = ps.getById(id).orElse(null);
+        if (p == null) {
+            return JSONUtil.NOT_FOUND_ERROR;
+        }
+
+        p.setName(dto.getName());
+        p.setStatus(Status.fromValue(dto.getStatus()));
+
+        return ps.update(p) ? JSONUtil.OK : JSONUtil.SERVER_ERROR;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteProject(@PathVariable("id") Integer id) {
+        if (id == null || id <= 0) {
+            return JSONUtil.BAD_REQUEST_ERROR;
+        }
+        boolean res = ps.deleteById(id);
+
+        return res ? JSONUtil.OK : JSONUtil.NOT_FOUND_ERROR;
     }
 }

@@ -69,6 +69,6 @@ public class DepartmentController {
         d.setName(dto.getName());
         // d.setEmployees(); // TODO employees
 
-        return JSONUtil.OK;
+        return ds.update(d) ? JSONUtil.OK : JSONUtil.SERVER_ERROR;
     }
 }
