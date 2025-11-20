@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, inject, Injectable, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
-import { Department } from '../../models/APIModels';
+import { Department, Employee } from '../../models/APIModels';
 import { ApiService } from '../../services/api.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from "@angular/material/icon";
@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PopupService } from '../../services/popup.service';
 import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
 import { DepartmentFormComponent } from './department-form/department-form.component';
+import { EmployeeSelectionDataType, SelectEmployeesComponent } from '../employee/select-employees/select-employees.component';
 
 type Columns = "id" | "name" | "employees" | "action";
 
@@ -157,8 +158,7 @@ export class DepartmentComponent implements AfterViewInit {
                 btnNotOk: ""
             }
         });
-        ref.afterClosed().subscribe(res => {
-            console.warn(res);
+        ref.afterClosed().subscribe(() => {
             this.updateDepartments();
         });
     }
@@ -223,6 +223,17 @@ export class DepartmentComponent implements AfterViewInit {
             return;
         }
 
-
+        const ref = this.dialog.open<SelectEmployeesComponent, EmployeeSelectionDataType, Employee[]>(SelectEmployeesComponent, {
+            minHeight: "60dvh",
+            minWidth: "80dvw"
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res === undefined || res.length == 0) { return; }
+            this.api.department.update({
+                id: p.id,
+                name: p.name,
+                employees: res.map((v) => v.id)
+            })
+        });
     }
 }

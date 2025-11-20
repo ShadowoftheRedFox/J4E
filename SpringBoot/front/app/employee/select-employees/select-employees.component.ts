@@ -1,24 +1,32 @@
-import { AfterViewInit, Component, inject, Injectable, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
-import { Employee, EmployeePermission, EmployeeRank } from '../../models/APIModels';
-import { ApiService } from '../../services/api.service';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from "@angular/material/icon";
-import { Subject } from 'rxjs';
-import { MatFormFieldModule } from "@angular/material/form-field"
-import { MatSort, MatSortModule, Sort } from "@angular/material/sort"
-import { MatMenuModule } from "@angular/material/menu"
-import { MatInputModule } from "@angular/material/input"
+import { AfterViewInit, Component, computed, inject, Injectable, signal, ViewChild } from '@angular/core';
+import { ApiService } from '../../../services/api.service';
+import { Employee, EmployeePermission, EmployeeRank } from '../../../models/APIModels';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
-import { EmployeeFormComponent } from './employee-form/employee-form.component';
-import { PopupService } from '../../services/popup.service';
-import { AuthService } from '../../services/auth.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from "@angular/material/form-field"
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input"
+import { MatMenuModule } from "@angular/material/menu"
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSort, MatSortModule, Sort } from "@angular/material/sort"
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { PopupService } from '../../../services/popup.service';
+import { Subject } from 'rxjs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
-type Columns = "id" | "firstName" | "lastName" | "username" | "action" | "department" | "ranks" | "permissions";
+type Columns = "id" | "selection" | "firstName" | "lastName" | "username";
+
+interface Task {
+    employee: Employee,
+    checked: boolean
+}
+
+export interface EmployeeSelectionDataType {
+    title?: string,
+    onlyOne?: boolean
+}
 
 @Injectable()
 export class CustomPaginatorIntl implements MatPaginatorIntl {
@@ -44,9 +52,8 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
         return `Page ${page + 1} sur ${amountPages}`;
     }
 }
-
 @Component({
-    selector: 'app-employee',
+    selector: 'app-select-employees',
     imports: [
         MatTableModule,
         MatPaginatorModule,
@@ -59,16 +66,20 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
+        MatCheckboxModule,
+        MatDialogModule
     ],
-    templateUrl: './employee.component.html',
-    styleUrl: './employee.component.scss',
+    templateUrl: './select-employees.component.html',
+    styleUrl: './select-employees.component.scss',
     providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
 })
-export class EmployeeComponent implements AfterViewInit {
-    readonly displayedColumns: Columns[] = ['id', 'username', 'firstName', 'lastName', 'ranks', 'department', 'action'];
+export class SelectEmployeesComponent implements AfterViewInit {
+    readonly displayedColumns: Columns[] = ['id', 'selection', 'username', 'firstName', 'lastName'];
+
+    readonly data = inject<EmployeeSelectionDataType>(MAT_DIALOG_DATA);
+    private dialogRef = inject(MatDialogRef<SelectEmployeesComponent, Employee[]>);
 
     private readonly api = inject(ApiService);
-    private readonly auth = inject(AuthService);
     private readonly popup = inject(PopupService);
     readonly dialog = inject(MatDialog);
 
@@ -76,18 +87,18 @@ export class EmployeeComponent implements AfterViewInit {
     sortedEmployees: Employee[] = [];
     filteredEmployees: Employee[] = [];
 
+    selectedEmployees = signal<{ tasks: Task[] }>({ tasks: [] });
+
+    departments: Map<number, string> = new Map<number, string>();
+    readonly roles = EmployeeRank;
+    readonly permissions = EmployeePermission;
+
     dataSource = new MatTableDataSource<Employee>([]);
 
     filterControl = new FormControl("");
     departmentControl = new FormControl("");
     roleControl = new FormControl("");
     permissionControl = new FormControl("");
-
-    departments: Map<number, string> = new Map<number, string>();
-    readonly roles = EmployeeRank;
-    readonly permissions = EmployeePermission;
-
-    ownId = this.auth.user?.id || 0;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -97,7 +108,12 @@ export class EmployeeComponent implements AfterViewInit {
         this.dataSource.sort = this.sort;
     }
 
+
     constructor() {
+        if (!this.data) this.data = {};
+        if (!this.data.title) this.data.title = "Selection d'employés";
+        if (!this.data.onlyOne) this.data.onlyOne = false;
+
         this.updateEmployees();
 
         this.api.department.getAll().subscribe(res => {
@@ -130,9 +146,19 @@ export class EmployeeComponent implements AfterViewInit {
                 this.allEmployees = res;
                 this.sortedEmployees = res;
                 this.dataSource.data = res;
+                this.filteredEmployees = res;
+                const tasks: Task[] = [];
+                this.allEmployees.forEach(e => {
+                    tasks.push({
+                        employee: e,
+                        checked: this.selectedEmployees().tasks.find(t => t.employee.id)?.checked || false
+                    });
+                });
+                this.selectedEmployees.set({ tasks: tasks });
             }
         });
     }
+
     updateFilter() {
         const filterValue = this.filterControl.value;
         const departmentValue = this.departmentControl.value;
@@ -194,81 +220,75 @@ export class EmployeeComponent implements AfterViewInit {
                     return this.compare(a.firstName, b.firstName, isAsc);
                 case "lastName":
                     return this.compare(a.lastName, b.lastName, isAsc);
-                case "department":
-                    return this.compare(this.departments.get(a.department) || "Aucun", this.departments.get(b.department) || "Aucun", isAsc);
                 default:
                     return isAsc ? 0 : 1;
             }
         })
     }
 
-    add() {
-        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
-            data: {
-                component: EmployeeFormComponent,
-                title: "Création d'un employé",
-                data: { employee: null },
-                btnNotOk: ""
-            }
-        });
-        ref.afterClosed().subscribe(res => {
-            if (res) {
-                this.updateEmployees();
-            }
-        });
+    isSelected(id: number) {
+        return this.selectedEmployees().tasks.find((v) => v.employee.id === id)?.checked || false;
     }
 
-    edit(id: number) {
-        const e = this.allEmployees.find(v => v.id == id);
-        if (e == undefined) {
-            this.popup.openSnackBar({ message: "Employé inconnu" });
-            return;
+    readonly partiallyChecked = computed(() => {
+        const task = this.selectedEmployees().tasks || [];
+        let every = true;
+        let some = false;
+        task.forEach(t => {
+            // if (this.filteredEmployees.includes(t.employee)) {
+            if (this.filteredEmployees.find((v) => v.id == t.employee.id) != undefined) {
+                if (t.checked) {
+                    some = true;
+                } else {
+                    every = false;
+                }
+            }
+        });
+        return some && !every;
+        // return task.some(t => t.checked) && !task.every(t => t.checked);
+    });
+
+    readonly allChecked = computed(() => {
+        const task = this.selectedEmployees().tasks || [];
+        let every = true;
+        for (const t in task) {
+            // if (!task[t].checked && this.filteredEmployees.includes(task[t].employee)) {
+            if (!task[t].checked && this.filteredEmployees.find((v) => v.id == task[t].employee.id)) {
+                every = false;
+                break;
+            }
         }
+        return every;
+        // return task.every(t => t.checked);
+    })
 
-        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
-            data: {
-                component: EmployeeFormComponent,
-                data: { employee: e },
-                title: "Modification de " + e.firstName + " " + e.lastName,
-                btnNotOk: ""
-            }
-        });
-        ref.afterClosed().subscribe(res => {
-            if (res) {
-                this.updateEmployees();
-            }
-        });
-    }
-
-    delete(id: number) {
-        const e = this.allEmployees.find(v => v.id == id);
-        if (e == undefined) {
-            this.popup.openSnackBar({ message: "Employé inconnu" });
-            return;
-        }
-
-        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
-            data: {
-                title: "Suppression de " + e.firstName + " " + e.lastName,
-                btnNotOk: "Annuler",
-                btnOk: "Effacer",
-                warn: true,
-                text: "Êtes vous sur de vouloir effacer cet employé?"
-            }
-        });
-        ref.afterClosed().subscribe(res => {
-            console.log(res);
-            if (res) {
-                this.api.employee.delete(id).subscribe({
-                    next: () => {
-                        this.popup.openSnackBar({ message: "Employé effacé" });
-                        this.updateEmployees();
-                    },
-                    error: () => {
-                        this.popup.openSnackBar({ message: "Échec de l'interaction" });
+    update(checked: boolean, id?: number) {
+        this.selectedEmployees.update(task => {
+            // if id is undefined, that means all tasks in the filtered array
+            if (id === undefined) {
+                task.tasks.forEach(e => {
+                    if (this.filteredEmployees.includes(e.employee)) {
+                        e.checked = checked;
                     }
                 });
+            } else {
+                if (this.data.onlyOne) {
+                    task.tasks.forEach((v) => {
+                        if (v.employee.id == id) {
+                            v.checked = checked;
+                        } else {
+                            v.checked = false;
+                        }
+                    })
+                } else {
+                    task.tasks.find((v) => v.employee.id == id)!.checked = checked
+                }
             }
+            return { ...task };
         });
+    }
+
+    submit() {
+        this.dialogRef.close(this.selectedEmployees().tasks.filter(t => t.checked === true).map((v) => v.employee));
     }
 }

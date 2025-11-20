@@ -1,5 +1,7 @@
 package fr.cyu.controller;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.cyu.controller.dto.NewDepartmentDTO;
 import fr.cyu.data.department.Department;
 import fr.cyu.data.department.DepartmentService;
+import fr.cyu.data.employee.Employee;
+import fr.cyu.data.employee.EmployeeService;
 import fr.cyu.utils.JSONUtil;
 import jakarta.validation.Valid;
 
@@ -27,6 +31,9 @@ import jakarta.validation.Valid;
 public class DepartmentController {
     @Autowired
     private DepartmentService ds;
+
+    @Autowired
+    private EmployeeService es;
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAll() {
@@ -50,7 +57,7 @@ public class DepartmentController {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
-        return ds.add(dto.getName()).isPresent() ? JSONUtil.OK : JSONUtil.BAD_REQUEST_ERROR;
+        return ds.add(dto.getName(), dto.getEmployees()).isPresent() ? JSONUtil.OK : JSONUtil.BAD_REQUEST_ERROR;
     }
 
     @PutMapping(value = "/{id}")
@@ -67,7 +74,16 @@ public class DepartmentController {
         }
 
         d.setName(dto.getName());
-        // d.setEmployees(); // TODO employees
+
+        ArrayList<Employee> ea = new ArrayList<>();
+        Iterator<Integer> i = dto.getEmployees().iterator();
+        while (i.hasNext()) {
+            Employee e = es.getById(i.next()).orElse(null);
+            if (e != null) {
+                ea.add(e);
+            }
+        }
+        d.setEmployees(ea);
 
         return ds.update(d) ? JSONUtil.OK : JSONUtil.SERVER_ERROR;
     }

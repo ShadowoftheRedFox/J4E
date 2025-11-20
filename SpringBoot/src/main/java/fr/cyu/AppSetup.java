@@ -2,6 +2,7 @@ package fr.cyu;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,7 +29,7 @@ public class AppSetup implements CommandLineRunner {
 
         // get administration derpatment, or create it
         Department administration = dr.findByName("Administration")
-                .orElseGet(() -> dr.save(new Department("Administration")));
+                .orElseGet(() -> dr.save(new Department("Administration", List.of())));
 
         // get admin employee, or create it
         HashSet<Rank> ranks = new HashSet<>();

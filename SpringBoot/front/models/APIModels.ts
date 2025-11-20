@@ -51,7 +51,7 @@ export interface Employee {
 export interface Department {
     id: number,
     name: string,
-    employees: Employee[]
+    employees: number[]
 }
 
 export const ProjectStatus = [

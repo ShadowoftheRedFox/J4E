@@ -30,8 +30,9 @@ public class Department {
     public Department() {
     }
 
-    public Department(String name) {
+    public Department(String name, List<Employee> employees) {
         setName(name);
+        setEmployees(employees);
     }
 
     /**
