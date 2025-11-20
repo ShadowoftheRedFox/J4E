@@ -44,7 +44,7 @@
 
                 <ng-container matColumnDef="selection">
                     <th mat-header-cell *matHeaderCellDef>
-                        @if (data.onlyOne) {
+                        @if (data.onlyOne !== true) {
                         <mat-checkbox [checked]="allChecked()" [indeterminate]="partiallyChecked()"
                             (change)="update($event.checked)"></mat-checkbox>
                         }

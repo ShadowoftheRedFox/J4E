@@ -25,7 +25,8 @@ interface Task {
 
 export interface EmployeeSelectionDataType {
     title?: string,
-    onlyOne?: boolean
+    onlyOne?: boolean,
+    alreadyIn?: number[]
 }
 
 @Injectable()
@@ -78,6 +79,7 @@ export class SelectEmployeesComponent implements AfterViewInit {
 
     readonly data = inject<EmployeeSelectionDataType>(MAT_DIALOG_DATA);
     private dialogRef = inject(MatDialogRef<SelectEmployeesComponent, Employee[]>);
+    private firestSet = true;
 
     private readonly api = inject(ApiService);
     private readonly popup = inject(PopupService);
@@ -113,6 +115,7 @@ export class SelectEmployeesComponent implements AfterViewInit {
         if (!this.data) this.data = {};
         if (!this.data.title) this.data.title = "Selection d'employés";
         if (!this.data.onlyOne) this.data.onlyOne = false;
+        if (!this.data.alreadyIn) this.data.alreadyIn = [];
 
         this.updateEmployees();
 
@@ -148,12 +151,23 @@ export class SelectEmployeesComponent implements AfterViewInit {
                 this.dataSource.data = res;
                 this.filteredEmployees = res;
                 const tasks: Task[] = [];
-                this.allEmployees.forEach(e => {
-                    tasks.push({
-                        employee: e,
-                        checked: this.selectedEmployees().tasks.find(t => t.employee.id)?.checked || false
+                // first set of employees
+                if (this.firestSet === true) {
+                    this.firestSet = false;
+                    this.allEmployees.forEach(e => {
+                        tasks.push({
+                            employee: e,
+                            checked: this.data.alreadyIn?.includes(e.id) || false
+                        });
                     });
-                });
+                } else {
+                    this.allEmployees.forEach(e => {
+                        tasks.push({
+                            employee: e,
+                            checked: this.selectedEmployees().tasks.find(t => t.employee.id)?.checked || false
+                        });
+                    });
+                }
                 this.selectedEmployees.set({ tasks: tasks });
             }
         });
@@ -202,7 +216,7 @@ export class SelectEmployeesComponent implements AfterViewInit {
     }
 
     sortData(sort: Sort) {
-        const data = this.allEmployees.slice();
+        const data = this.filteredEmployees.slice();
         if (!sort.active || sort.direction === '') {
             this.sortedEmployees = data;
             return;
@@ -223,7 +237,7 @@ export class SelectEmployeesComponent implements AfterViewInit {
                 default:
                     return isAsc ? 0 : 1;
             }
-        })
+        });
     }
 
     isSelected(id: number) {

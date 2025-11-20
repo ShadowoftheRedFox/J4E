@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import fr.cyu.data.department.Department;
 import fr.cyu.data.employee.Employee;
 import fr.cyu.data.payslip.Payslip;
 
@@ -21,6 +22,7 @@ public class JSONUtil {
         SimpleModule m = new SimpleModule();
         m.addSerializer(Employee.class, new EmployeeModule());
         m.addSerializer(Payslip.class, new PayslipModule());
+        m.addSerializer(Department.class, new DepartmentModule());
         json.registerModule(m);
     }
 

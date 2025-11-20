@@ -225,7 +225,12 @@ export class DepartmentComponent implements AfterViewInit {
 
         const ref = this.dialog.open<SelectEmployeesComponent, EmployeeSelectionDataType, Employee[]>(SelectEmployeesComponent, {
             minHeight: "60dvh",
-            minWidth: "80dvw"
+            minWidth: "80dvw",
+            data: {
+                title: "Ajouter des employés au département " + p.name,
+                onlyOne: false,
+                alreadyIn: p.employees
+            }
         });
         ref.afterClosed().subscribe(res => {
             if (res === undefined || res.length == 0) { return; }
@@ -233,7 +238,15 @@ export class DepartmentComponent implements AfterViewInit {
                 id: p.id,
                 name: p.name,
                 employees: res.map((v) => v.id)
-            })
+            }).subscribe({
+                next: () => {
+                    this.popup.openSnackBar({ message: "Département modifé" });
+                    this.updateDepartments();
+                },
+                error: () => {
+                    this.popup.openSnackBar({ message: "Échec de l'interaction" });
+                }
+            });
         });
     }
 }

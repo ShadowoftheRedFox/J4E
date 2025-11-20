@@ -38,7 +38,16 @@ public class DepartmentService {
             }
         }
 
-        return Optional.of(dr.save(new Department(name, ea)));
+        Optional<Department> d = Optional.of(dr.save(new Department(name, ea)));
+
+        if (d.isPresent()) {
+            d.get().getEmployees().forEach(e -> {
+                e.setDepartment(d.get());
+                es.update(e);
+            });
+        }
+
+        return d;
     }
 
     public Optional<Department> getById(final Integer id) {
@@ -52,6 +61,13 @@ public class DepartmentService {
         if (d == null || getById(d.getId()).isEmpty()) {
             return false;
         }
+
+        // update all employee
+        d.getEmployees().forEach(e -> {
+            e.setDepartment(d);
+            es.update(e);
+        });
+
         dr.save(d);
         return true;
     }

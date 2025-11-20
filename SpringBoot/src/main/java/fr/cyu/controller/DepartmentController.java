@@ -84,6 +84,7 @@ public class DepartmentController {
             }
         }
         d.setEmployees(ea);
+        System.out.println(ea);
 
         return ds.update(d) ? JSONUtil.OK : JSONUtil.SERVER_ERROR;
     }

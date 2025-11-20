@@ -23,7 +23,7 @@ public class Department {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     @JsonManagedReference // prevent reference chain when serializing
     private List<Employee> employees = new ArrayList<>();
 
@@ -54,6 +54,9 @@ public class Department {
      */
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
+        employees.forEach(e -> {
+            e.setDepartment(this);
+        });
     }
 
     /**
