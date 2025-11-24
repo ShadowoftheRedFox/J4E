@@ -1,7 +1,5 @@
 package fr.cyu.data.department;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,21 +22,12 @@ public class DepartmentService {
         return dr.findAll();
     }
 
-    public Optional<Department> add(final String name, final List<Integer> employees) {
+    public Optional<Department> add(final String name, final List<Employee> employees) {
         if (name == null || name.isBlank() || employees == null) {
             return Optional.empty();
         }
 
-        ArrayList<Employee> ea = new ArrayList<>();
-        Iterator<Integer> i = employees.iterator();
-        while (i.hasNext()) {
-            Employee e = es.getById(i.next()).orElse(null);
-            if (e != null) {
-                ea.add(e);
-            }
-        }
-
-        Optional<Department> d = Optional.of(dr.save(new Department(name, ea)));
+        Optional<Department> d = Optional.of(dr.save(new Department(name, employees)));
 
         if (d.isPresent()) {
             d.get().getEmployees().forEach(e -> {
@@ -69,6 +58,15 @@ public class DepartmentService {
         });
 
         dr.save(d);
+        return true;
+    }
+
+    public boolean deleteById(final Integer id) {
+        if (id == null || id <= 0 || getById(id).isEmpty()) {
+            return false;
+        }
+
+        dr.deleteById(id);
         return true;
     }
 }

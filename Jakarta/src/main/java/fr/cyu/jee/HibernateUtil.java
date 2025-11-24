@@ -3,7 +3,6 @@ package fr.cyu.jee;
 import java.util.List;
 import java.util.Optional;
 
-import fr.cyu.jee.beans.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -55,8 +54,8 @@ public class HibernateUtil {
             return res;
         } catch (Exception e) {
             throw new RuntimeException(e);
-//            swf.except(trs, e);
-//            return null;
+            // swf.except(trs, e);
+            // return null;
         }
     }
 
@@ -109,8 +108,8 @@ public class HibernateUtil {
 
         return res;
     }
-    
-    public  static <T> T get(Class<T> c,Object primary_key) {
+
+    public static <T> T get(Class<T> c, Object primary_key) {
         return HibernateUtil.useSession(new SessionWrapper<T>() {
             @Override
             public T use(Transaction trs, Session session) {

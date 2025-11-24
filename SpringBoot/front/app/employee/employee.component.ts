@@ -18,7 +18,7 @@ import { PopupService } from '../../services/popup.service';
 import { AuthService } from '../../services/auth.service';
 import { MatSelectModule } from '@angular/material/select';
 
-type Columns = "id" | "firstName" | "lastName" | "username" | "action" | "department" | "ranks" | "permissions";
+type Columns = "id" | "firstName" | "lastName" | "username" | "action" | "department" | "project" | "ranks" | "permissions";
 
 @Injectable()
 export class CustomPaginatorIntl implements MatPaginatorIntl {
@@ -65,7 +65,7 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
     providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
 })
 export class EmployeeComponent implements AfterViewInit {
-    readonly displayedColumns: Columns[] = ['id', 'username', 'firstName', 'lastName', 'ranks', 'department', 'action'];
+    readonly displayedColumns: Columns[] = ['id', 'username', 'firstName', 'lastName', 'ranks', 'department', 'project', 'action'];
 
     private readonly api = inject(ApiService);
     private readonly auth = inject(AuthService);
@@ -84,6 +84,7 @@ export class EmployeeComponent implements AfterViewInit {
     permissionControl = new FormControl("");
 
     departments: Map<number, string> = new Map<number, string>();
+    project: Map<number, string> = new Map<number, string>();
     readonly roles = EmployeeRank;
     readonly permissions = EmployeePermission;
 
@@ -100,11 +101,24 @@ export class EmployeeComponent implements AfterViewInit {
     constructor() {
         this.updateEmployees();
 
-        this.api.department.getAll().subscribe(res => {
-            if (res == null || !Array.isArray(res)) { return; }
-            res.forEach(d => {
-                this.departments.set(d.id, d.name);
-            });
+        this.api.department.getAll().subscribe({
+            next: (res) => {
+                if (res == null || !Array.isArray(res)) { return; }
+                res.forEach(d => {
+                    this.departments.set(d.id, d.name);
+                });
+            }
+        });
+
+        this.api.project.getAll().subscribe({
+            next: (res) => {
+                this.allEmployees.forEach(e => {
+                    this.project.set(e.id, res.filter((p) => p.employees.includes(e.id)).map((p) => p.name).join(", "));
+                    if (this.project.get(e.id)?.length === 0) {
+                        this.project.set(e.id, "Aucun");
+                    }
+                });
+            }
         });
 
         this.filterControl.valueChanges.subscribe(() => {

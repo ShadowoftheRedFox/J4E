@@ -1,7 +1,5 @@
 package fr.cyu.controller;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.cyu.controller.dto.NewDepartmentDTO;
 import fr.cyu.data.department.Department;
 import fr.cyu.data.department.DepartmentService;
-import fr.cyu.data.employee.Employee;
 import fr.cyu.data.employee.EmployeeService;
 import fr.cyu.utils.JSONUtil;
 import jakarta.validation.Valid;
@@ -57,7 +55,8 @@ public class DepartmentController {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
-        return ds.add(dto.getName(), dto.getEmployees()).isPresent() ? JSONUtil.OK : JSONUtil.BAD_REQUEST_ERROR;
+        return ds.add(dto.getName(), es.employeeFromIds(dto.getEmployees())).isPresent() ? JSONUtil.OK
+                : JSONUtil.BAD_REQUEST_ERROR;
     }
 
     @PutMapping(value = "/{id}")
@@ -74,18 +73,17 @@ public class DepartmentController {
         }
 
         d.setName(dto.getName());
-
-        ArrayList<Employee> ea = new ArrayList<>();
-        Iterator<Integer> i = dto.getEmployees().iterator();
-        while (i.hasNext()) {
-            Employee e = es.getById(i.next()).orElse(null);
-            if (e != null) {
-                ea.add(e);
-            }
-        }
-        d.setEmployees(ea);
-        System.out.println(ea);
+        d.setEmployees(es.employeeFromIds(dto.getEmployees()));
 
         return ds.update(d) ? JSONUtil.OK : JSONUtil.SERVER_ERROR;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteDepartment(@PathVariable("id") Integer id) {
+        if (id == null || id <= 0) {
+            return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        return ds.deleteById(id) ? JSONUtil.OK : JSONUtil.NOT_FOUND_ERROR;
     }
 }

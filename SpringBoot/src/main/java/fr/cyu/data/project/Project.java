@@ -1,6 +1,5 @@
 package fr.cyu.data.project;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.lang.NonNull;
@@ -39,10 +38,10 @@ public class Project {
     public Project() {
     }
 
-    public Project(String name, Status status) {
+    public Project(String name, Status status, Set<Employee> employees) {
         setName(name);
         setStatus(status);
-        setEmployees(new HashSet<>());
+        setEmployees(employees);
     }
 
     /**

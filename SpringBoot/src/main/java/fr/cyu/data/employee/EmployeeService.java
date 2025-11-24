@@ -1,5 +1,7 @@
 package fr.cyu.data.employee;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -52,5 +54,21 @@ public class EmployeeService {
         }
         er.save(e);
         return true;
+    }
+
+    public List<Employee> employeeFromIds(final List<Integer> ids) {
+        ArrayList<Employee> ea = new ArrayList<>();
+
+        if (ids != null) {
+            Iterator<Integer> i = ids.iterator();
+            while (i.hasNext()) {
+                Employee e = getById(i.next()).orElse(null);
+                if (e != null) {
+                    ea.add(e);
+                }
+            }
+        }
+
+        return ea;
     }
 }

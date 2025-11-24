@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, inject, Injectable, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
-import { Project } from '../../models/APIModels';
+import { Employee, Project } from '../../models/APIModels';
 import { ApiService } from '../../services/api.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from "@angular/material/icon";
@@ -15,9 +15,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { PopupService } from '../../services/popup.service';
 import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
 import { ProjectFormComponent } from './project-form/project-form.component';
+import { EmployeeSelectionDataType, SelectEmployeesComponent } from '../employee/select-employees/select-employees.component';
 
 
-type Columns = "id" | "name" | "status" /*| "projects"*/ | "action";
+type Columns = "id" | "name" | "status" | "employees" | "action";
 
 @Injectable()
 export class CustomPaginatorIntl implements MatPaginatorIntl {
@@ -62,11 +63,11 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
     styleUrl: './project.component.scss'
 })
 export class ProjectComponent implements AfterViewInit {
-    readonly displayedColumns: Columns[] = ['id', 'name', 'status', 'action'];
+    readonly displayedColumns: Columns[] = ['id', 'name', 'status', 'employees', 'action'];
 
     private readonly api = inject(ApiService);
     private readonly popup = inject(PopupService);
-    readonly dialog = inject(MatDialog);
+    private readonly dialog = inject(MatDialog);
 
     allProjects: Project[] = [];
     sortedProjects: Project[] = [];
@@ -108,8 +109,8 @@ export class ProjectComponent implements AfterViewInit {
     }
 
     updateProjects() {
-        this.api.project.getAll().subscribe(res => {
-            if (Array.isArray(res)) {
+        this.api.project.getAll().subscribe({
+            next: (res) => {
                 this.allProjects = res;
                 this.sortedProjects = res;
                 this.dataSource.data = res;
@@ -217,6 +218,40 @@ export class ProjectComponent implements AfterViewInit {
                     }
                 });
             }
+        });
+    }
+
+    editEmployees(id: number) {
+        const p = this.allProjects.find(v => v.id == id);
+        if (p == undefined) {
+            this.popup.openSnackBar({ message: "Département inconnu" });
+            return;
+        }
+
+        const ref = this.dialog.open<SelectEmployeesComponent, EmployeeSelectionDataType, Employee[]>(SelectEmployeesComponent, {
+            minWidth: "80dvw",
+            data: {
+                title: "Ajouter des employés au projet " + p.name,
+                onlyOne: false,
+                alreadyIn: p.employees
+            }
+        });
+        ref.afterClosed().subscribe(res => {
+            if (res === undefined || res.length == 0) { return; }
+            this.api.project.update({
+                id: p.id,
+                name: p.name,
+                status: p.status,
+                employees: res.map((v) => v.id)
+            }).subscribe({
+                next: () => {
+                    this.popup.openSnackBar({ message: "Projet modifé" });
+                    this.updateProjects();
+                },
+                error: () => {
+                    this.popup.openSnackBar({ message: "Échec de l'interaction" });
+                }
+            });
         });
     }
 }

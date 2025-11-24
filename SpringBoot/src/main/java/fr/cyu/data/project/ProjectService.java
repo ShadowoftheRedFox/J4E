@@ -2,9 +2,12 @@ package fr.cyu.data.project;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import fr.cyu.data.employee.Employee;
 
 @Service
 public class ProjectService {
@@ -15,11 +18,11 @@ public class ProjectService {
         return pr.findAll();
     }
 
-    public Optional<Project> add(String name, Status status) {
-        if (name == null || status == null || name.isBlank()) {
+    public Optional<Project> add(String name, Status status, Set<Employee> employees) {
+        if (name == null || status == null || name.isBlank() || employees == null) {
             return Optional.empty();
         }
-        return Optional.of(pr.save(new Project(name, status)));
+        return Optional.of(pr.save(new Project(name, status, employees)));
     }
 
     public Optional<Project> getById(Integer id) {

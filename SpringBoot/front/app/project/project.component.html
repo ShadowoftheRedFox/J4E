@@ -19,6 +19,11 @@
                 <td mat-cell *matCellDef="let element"> {{element.name}} </td>
             </ng-container>
 
+            <ng-container matColumnDef="employees">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="employees"> Nombre d'employés </th>
+                <td mat-cell *matCellDef="let element"> {{element.employees.length}} </td>
+            </ng-container>
+
             <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="status"> Status </th>
                 <td mat-cell *matCellDef="let element"> {{element.status}} </td>
@@ -29,6 +34,8 @@
                 <td mat-cell *matCellDef="let element">
                     <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
                     <mat-menu #menu>
+                        <button mat-menu-item (click)="editEmployees(element.id)"><mat-icon>add</mat-icon>Modifier les
+                            employés</button>
                         <button mat-menu-item (click)="edit(element.id)"><mat-icon>edit</mat-icon> Modifier</button>
                         <button mat-menu-item (click)="delete(element.id)"><mat-icon>delete</mat-icon> Effacer</button>
                     </mat-menu>

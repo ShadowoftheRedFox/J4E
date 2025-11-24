@@ -192,7 +192,7 @@ export class DepartmentComponent implements AfterViewInit {
             return;
         }
 
-        const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
+        const ref = this.dialog.open<DialogComponent, DialogDataType, number>(DialogComponent, {
             data: {
                 title: "Suppression de " + p.name,
                 btnNotOk: "Annuler",
@@ -202,7 +202,7 @@ export class DepartmentComponent implements AfterViewInit {
             }
         });
         ref.afterClosed().subscribe(res => {
-            if (res) {
+            if (res === 1) {
                 this.api.department.delete(id).subscribe({
                     next: () => {
                         this.popup.openSnackBar({ message: "Département effacé" });

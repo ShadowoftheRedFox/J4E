@@ -66,7 +66,7 @@ export interface Project {
     id: number,
     name: string,
     status: ProjectStatus
-    employees: Employee[]
+    employees: number[]
 }
 
 export interface Payslip {

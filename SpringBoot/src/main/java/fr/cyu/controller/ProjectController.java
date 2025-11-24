@@ -1,5 +1,6 @@
 package fr.cyu.controller;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.cyu.controller.dto.NewProjectDTO;
+import fr.cyu.data.employee.Employee;
+import fr.cyu.data.employee.EmployeeService;
 import fr.cyu.data.project.Project;
 import fr.cyu.data.project.ProjectService;
 import fr.cyu.data.project.Status;
@@ -29,6 +32,9 @@ import jakarta.validation.Valid;
 public class ProjectController {
     @Autowired
     private ProjectService ps;
+
+    @Autowired
+    private EmployeeService es;
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAll() {
@@ -52,7 +58,9 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
-        boolean res = ps.add(dto.getName(), Status.fromValue(dto.getStatus())).isPresent();
+        boolean res = ps.add(dto.getName(), Status.fromValue(dto.getStatus()),
+                new HashSet<Employee>(es.employeeFromIds(dto.getEmployees())))
+                .isPresent();
         return res ? JSONUtil.OK : JSONUtil.BAD_REQUEST_ERROR;
     }
 
@@ -69,6 +77,7 @@ public class ProjectController {
 
         p.setName(dto.getName());
         p.setStatus(Status.fromValue(dto.getStatus()));
+        p.setEmployees(new HashSet<Employee>(es.employeeFromIds(dto.getEmployees())));
 
         return ps.update(p) ? JSONUtil.OK : JSONUtil.SERVER_ERROR;
     }
