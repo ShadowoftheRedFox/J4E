@@ -120,7 +120,7 @@
                     Collection<Payslip> payslips = (Collection<Payslip>) request.getAttribute("payslips");
                     int count = payslips != null ? payslips.size() : 0;
                 %>
-                Liste des fiches de paie (<%= count%>)
+                Liste des fiches de paie
             </caption>
             <thead>
             <tr>
@@ -133,7 +133,7 @@
                 <th scope="col">Primes</th>
                 <th scope="col">Déductions</th>
                 <th scope="col">Net à payer</th>
-                <th scope="col">Actions</th>
+                <th scope="col">Actions</th> 
             </tr>
             </thead>
             <tbody>
@@ -160,13 +160,14 @@
                         <a href="${pageContext.request.contextPath}/payslip/pdf/<%= p.getId()%>">
                             <button type="button">PDF</button>
                         </a>
-                        <form method="post" action="${pageContext.request.contextPath}/payslip/delete">
-                            <input type="number" name="id" value="<%= p.getId()%>">
-                            <button type="submit">Effacer</button>
-                        </form>
                         <a href="${pageContext.request.contextPath}/payslip/edit/<%= p.getId()%>">
                             <button>Modifier</button>
                         </a>
+                        <form method="post" action="${pageContext.request.contextPath}/payslip/delete">
+                            
+                            <button type="submit">Effacer</button>
+                        </form>
+                        
                     </div>
                 </td>
             </tr>

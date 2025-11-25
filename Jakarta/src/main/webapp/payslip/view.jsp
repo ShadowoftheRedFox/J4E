@@ -78,13 +78,15 @@
                         <a href="${pageContext.request.contextPath}/payslip/pdf/<%= p.getId()%>">
                             <button type="button">PDF</button>
                         </a>
-                        <form method="post" action="${pageContext.request.contextPath}/payslip/delete">
-                            <input type="number" name="id" value="<%= p.getId()%>">
-                            <button type="submit">Effacer</button>
-                        </form>
                         <a href="${pageContext.request.contextPath}/payslip/edit/<%= p.getId()%>">
                             <button>Modifier</button>
                         </a>
+                        
+                        <form method="post" action="${pageContext.request.contextPath}/payslip/delete">
+                          
+                            <button type="submit">Effacer</button>
+                        </form>
+                        
                     </div>
                 </td>
             </tr>
