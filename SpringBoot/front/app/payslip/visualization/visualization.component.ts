@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal, WritableSignal } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Employee, Payslip } from '../../../models/APIModels';
@@ -26,8 +26,7 @@ import { PayslipItemComponent } from "./payslip-item/payslip-item.component";
     ],
     templateUrl: './visualization.component.html',
     styleUrl: './visualization.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [provideNativeDateAdapter()],
+    providers: [provideNativeDateAdapter()]
 })
 export class VisualizationComponent {
     private readonly api = inject(ApiService);
@@ -41,6 +40,11 @@ export class VisualizationComponent {
     allPayslips: Payslip[] = [];
     filteredPayslips: Payslip[] = [];
     ploof: WritableSignal<Payslip[]> = signal([]);
+
+    readonly range = new FormGroup({
+        start: new FormControl<Date | null>(null),
+        end: new FormControl<Date | null>(null),
+    });
 
     constructor() {
         this.route.paramMap.subscribe(res => {
@@ -80,14 +84,8 @@ export class VisualizationComponent {
             this.filteredPayslips = this.allPayslips.filter(p => p.date >= start.getTime() && p.date <= end.getTime());
         }
         this.ploof.set(this.filteredPayslips);
-        console.warn(this.filteredPayslips);
         this.ref.detectChanges();
     }
-
-    readonly range = new FormGroup({
-        start: new FormControl<Date | null>(null),
-        end: new FormControl<Date | null>(null),
-    });
 
     add() {
         const ref = this.dialog.open<DialogComponent, DialogDataType, boolean>(DialogComponent, {
@@ -159,6 +157,8 @@ export class VisualizationComponent {
     }
 
     download(p: Payslip) {
-        console.log(p);
+        this.api.payslip.pdf(p.id, (err) => {
+            this.popup.openSnackBar({ message: err.message || "Échec du téléchargement" });
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { BaseResponse, Department, Employee, Payslip, Project } from '../models/APIModels';
@@ -89,6 +89,43 @@ export class ApiService {
         },
         delete: (id: number) => {
             return this.sendApiRequest<BaseResponse>("DELETE", "payslip/" + id, {}, "Deleting payslip " + id);
+        },
+        raw_pdf: (id: number) => {
+            return this.http.get(ApiUrl + "payslip/" + id + "/pdf", {
+                responseType: 'arraybuffer',
+                headers: new HttpHeaders().append('Content-Type', 'application/pdf'),
+            });
+        },
+        pdf: (id: number, err_callback?: (err: BaseResponse) => void) => {
+            this.payslip.raw_pdf(id).subscribe({
+                next: (r) => {
+                    try {
+                        const file = new Blob([r], { type: "application/pdf" });
+                        const url: string = window.URL.createObjectURL(file);
+                        const anchorElement: HTMLAnchorElement = document.createElement('a');
+                        anchorElement.download = "payslip" + id;
+                        anchorElement.href = url;
+                        anchorElement.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    } catch (_) {
+                        if (err_callback != undefined) {
+                            err_callback({
+                                error: "Can't load PDF",
+                                status: 400
+                            });
+                        }
+                    }
+                },
+                error: (err) => {
+                    console.error(err);
+                    if (err_callback != undefined) {
+                        err_callback({
+                            error: "Can't load PDF",
+                            status: 400
+                        });
+                    }
+                }
+            });
         }
     }
 

@@ -1,6 +1,8 @@
 package fr.cyu.data.payslip;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -9,6 +11,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 
 import fr.cyu.data.employee.Employee;
 
@@ -71,5 +78,45 @@ public class PayslipService {
         }
         pr.save(p);
         return true;
+    }
+
+    public byte[] generatePdf(final Integer id) {
+        Payslip p = getById(id).orElse(null);
+        if (p == null) {
+            return null;
+        }
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc);
+
+            Employee employee = p.getEmployee();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+            document.add(new Paragraph("FICHE DE PAIE"));
+            document.add(new Paragraph("Date: " + sdf.format(p.getDate())));
+            document.add(new Paragraph("Employe: " + employee.getFirstName() + " " + employee.getLastName()));
+            document.add(new Paragraph(
+                    "Salaire de base: " + String.format("%.2f EUR", p.getHour() * p.getWage())));
+
+            if (p.getBonus() > 0) {
+                document.add(new Paragraph("Primes: " + String.format("%.2f EUR", p.getBonus())));
+            }
+
+            if (p.getMalus() > 0) {
+                document.add(new Paragraph("Deductions: " + String.format("%.2f EUR", p.getMalus())));
+            }
+
+            document.add(new Paragraph(
+                    "TOTAL: " + String.format("%.2f EUR", p.getHour() * p.getWage() + p.getBonus() - p.getMalus())));
+
+            document.close();
+            return baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

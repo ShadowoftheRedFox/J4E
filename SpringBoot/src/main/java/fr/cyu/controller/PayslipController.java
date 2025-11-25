@@ -74,6 +74,19 @@ public class PayslipController {
         return ResponseEntity.ok(JSONUtil.stringify(e.get()));
     }
 
+    @GetMapping(value = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public Object getPdf(@PathVariable("id") Integer id) {
+        if (id <= 0) {
+            return JSONUtil.NOT_FOUND_ERROR;
+        }
+        Payslip p = ps.getById(id).orElse(null);
+        if (p == null) {
+            return JSONUtil.NOT_FOUND_ERROR;
+        }
+
+        return ps.generatePdf(id);
+    }
+
     @PutMapping(value = "/{id}")
     public ResponseEntity<String> editPayslip(@PathVariable("id") Integer id, @Valid @RequestBody NewPayslipDTO dto,
             BindingResult bindingResult) {
