@@ -2,6 +2,10 @@ package fr.cyu.jee.controller.report;
 
 import java.io.IOException;
 
+import fr.cyu.jee.beans.Department;
+import fr.cyu.jee.beans.User;
+import fr.cyu.jee.dao.DepartmentDAO;
+import fr.cyu.jee.dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,5 +17,13 @@ public class Index extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("report/index.jsp").forward(req, resp);
+        String userId = req.getParameter("user_id");
+        String departement = req.getParameter("departement");
+        String avancement =  req.getParameter("avancement");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        
     }
 }
