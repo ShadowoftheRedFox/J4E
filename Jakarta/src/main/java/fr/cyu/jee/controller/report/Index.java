@@ -20,6 +20,10 @@ public class Index extends HttpServlet {
         String userId = req.getParameter("user_id");
         String departement = req.getParameter("departement");
         String avancement =  req.getParameter("avancement");
+        if (userId == null || departement == null || avancement == null) {
+            req.setAttribute("error","error");
+            resp.sendRedirect(req.getContextPath());
+        }
     }
 
     @Override
