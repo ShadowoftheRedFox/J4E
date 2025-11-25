@@ -34,7 +34,8 @@
     <p>Aucune paies ne correspond à critères recherchés.</p>
     } @else {
     @for (payslip of ploof(); track $index) {
-    <app-payslip-item [payslip]="payslip" (edit)="edit($event)" (delete)="delete($event)" (print)="print($event)" />
+    <app-payslip-item [payslip]="payslip" (edit)="edit($event)" (delete)="delete($event)"
+        (download)="download($event)" />
     }
     }
     } @else {

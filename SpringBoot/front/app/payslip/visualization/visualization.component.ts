@@ -50,11 +50,12 @@ export class VisualizationComponent {
                     next: (res) => {
                         this.employee = res;
                         this.updatePayslips();
+                        this.updateSelection(null, null);
                     },
                     error: () => {
                         this.employee_id.set(-1);
                     }
-                })
+                });
             }
         });
 
@@ -79,6 +80,7 @@ export class VisualizationComponent {
             this.filteredPayslips = this.allPayslips.filter(p => p.date >= start.getTime() && p.date <= end.getTime());
         }
         this.ploof.set(this.filteredPayslips);
+        console.warn(this.filteredPayslips);
         this.ref.detectChanges();
     }
 
@@ -96,10 +98,8 @@ export class VisualizationComponent {
                 btnNotOk: ""
             }
         });
-        ref.afterClosed().subscribe(res => {
-            if (res) {
-                this.updatePayslips();
-            }
+        ref.afterClosed().subscribe(() => {
+            this.updatePayslips();
         });
     }
 
@@ -158,7 +158,7 @@ export class VisualizationComponent {
         });
     }
 
-    print(p: Payslip) {
+    download(p: Payslip) {
         console.log(p);
     }
 }

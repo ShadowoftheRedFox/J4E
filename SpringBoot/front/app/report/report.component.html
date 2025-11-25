@@ -1,1 +1,36 @@
-<p>report works!</p>
+<div>
+    <h1>Employés:</h1>
+    <p>Nombre d'employés: {{employees.length}}</p>
+    <div class="flex flex-row gap-4">
+        @for (r of ranks; track $index) {
+        <p>{{r}}: {{getEmployeeOfRank(r)}}</p>
+        }
+    </div>
+</div>
+<hr />
+<div>
+    <h1>Départements:</h1>
+    <p>Nombre de départements: {{departments.length}}</p>
+    <p>Moyenne d'employés: {{getDepartmentMeanEmployee()}}</p>
+    <div class="flex flex-row gap-4">
+        @for (d of departments; track $index) {
+        <p>{{d.name}}: {{d.employees.length}}</p>
+        }
+    </div>
+</div>
+<hr />
+<div>
+    <h1>Projects:</h1>
+    <p>Nombre de projets: {{projects.length}}</p>
+    <p>Moyenne d'employés: {{getProjectMeanEmployee()}}</p>
+    <ul>
+        <li>En cours: {{getProjectOngoing()}} ({{(getProjectOngoing() / projects.length)*100}}%)</li>
+        <li>Terminé: {{getProjecFinished()}} ({{(getProjecFinished() / projects.length)*100}}%)</li>
+        <li>Annulé: {{getProjectCanceled()}} ({{(getProjectCanceled() / projects.length)*100}}%)</li>
+    </ul>
+    <div class="flex flex-row gap-4">
+        @for (p of projects; track $index) {
+        <p>{{p.name}}: {{p.employees.length}}</p>
+        }
+    </div>
+</div>

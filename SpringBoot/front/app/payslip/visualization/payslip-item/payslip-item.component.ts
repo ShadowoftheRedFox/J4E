@@ -19,7 +19,7 @@ export class PayslipItemComponent {
     @Input({ required: true }) payslip!: Payslip;
     @Output() edit = new EventEmitter<number>();
     @Output() delete = new EventEmitter<number>();
-    @Output() print = new EventEmitter<Payslip>();
+    @Output() download = new EventEmitter<Payslip>();
 
     formatDate(date: number) {
         return toDate(new Date(date).toDateString());
