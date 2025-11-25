@@ -17,14 +17,13 @@ public class Index extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("report/index.jsp").forward(req, resp);
-        User user=new User();
-        UserDAO udao=new UserDAO();
-        Department  department=new Department();
-        DepartmentDAO ddao=new DepartmentDAO();
-        
-        
-      
-        
+        String userId = req.getParameter("user_id");
+        String departement = req.getParameter("departement");
+        String avancement =  req.getParameter("avancement");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         
     }
 }
