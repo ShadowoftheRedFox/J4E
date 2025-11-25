@@ -10,6 +10,14 @@
     <jsp:include page="/components/header.jsp" />
     <h1>Rapport</h1>
     <jsp:include page="/components/footer.jsp" />
+    <h2>Département</h2>
+    <br>
+    <h2>Employée</h2>
+    <br>
+    <h2>Nombre employée:</h2>
+    <br>
+    <h2>Avancement</h2>
+    
 </body>
 
 </html>
