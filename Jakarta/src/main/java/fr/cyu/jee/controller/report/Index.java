@@ -22,6 +22,7 @@ public class Index extends HttpServlet {
         Department  department=new Department();
         DepartmentDAO ddao=new DepartmentDAO();
         
+        
       
         
         
