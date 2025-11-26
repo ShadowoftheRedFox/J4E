@@ -3,7 +3,7 @@ package fr.cyu.controller.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class AuthDTO {
+public class AuthDTO extends SessionDTO {
     @NotBlank
     @Size(min = 3, max = 50)
     private String username;

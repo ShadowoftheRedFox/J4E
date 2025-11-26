@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.cyu.controller.dto.EditEmployeeDTO;
 import fr.cyu.controller.dto.NewEmployeeDTO;
+import fr.cyu.controller.dto.SessionDTO;
+import fr.cyu.data.SessionService;
 import fr.cyu.data.department.DepartmentService;
 import fr.cyu.data.employee.Employee;
 import fr.cyu.data.employee.EmployeeService;
@@ -37,6 +39,9 @@ public class EmployeeController {
     @Autowired
     private DepartmentService ds;
 
+    @Autowired
+    private SessionService ss;
+
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAll() {
         return JSONUtil.stringify(es.getAll());
@@ -46,6 +51,10 @@ public class EmployeeController {
     public ResponseEntity<String> newEmployee(@Valid @RequestBody NewEmployeeDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        if (!ss.isAuthorized(dto, Permission.CREATE_USER)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
         }
 
         HashSet<Permission> permissions = new HashSet<>();
@@ -81,6 +90,10 @@ public class EmployeeController {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
 
+        if (!ss.isAuthorized(dto, Permission.EDIT_USER)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         Employee e = es.getById(id).orElse(null);
         if (e == null) {
             return JSONUtil.NOT_FOUND_ERROR;
@@ -109,10 +122,16 @@ public class EmployeeController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> deleteEmployee(@PathVariable("id") Integer id,
+            @Valid @RequestBody SessionDTO dto, BindingResult bindingResult) {
         if (id == null || id <= 0) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
+
+        if (!ss.isAuthorized(dto, Permission.DELETE_USER)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         boolean res = es.deleteById(id);
 
         return res ? JSONUtil.OK : JSONUtil.NOT_FOUND_ERROR;

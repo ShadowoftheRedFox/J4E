@@ -27,8 +27,9 @@ public class AuthController {
         if (biding.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
+
         Employee e = er.findByUsername(dto.getUsername()).orElse(null);
-        if (e == null || !e.getPassword().equals(dto.getPassword())) {
+        if (e == null || !e.getPassword().equals(dto.getPassword()) || dto.getSession_id() > 0) {
             return JSONUtil.UNAUTHORIZED_ERROR;
         }
         return ResponseEntity.ok(JSONUtil.stringify(e));

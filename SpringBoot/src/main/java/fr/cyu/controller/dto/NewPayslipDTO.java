@@ -5,7 +5,7 @@ import java.sql.Date;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-public class NewPayslipDTO {
+public class NewPayslipDTO extends SessionDTO {
     @NotNull
     @Min(0)
     private Float hour;

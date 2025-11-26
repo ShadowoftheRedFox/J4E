@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.cyu.controller.dto.NewProjectDTO;
+import fr.cyu.controller.dto.SessionDTO;
+import fr.cyu.data.SessionService;
 import fr.cyu.data.employee.Employee;
 import fr.cyu.data.employee.EmployeeService;
+import fr.cyu.data.employee.Permission;
 import fr.cyu.data.project.Project;
 import fr.cyu.data.project.ProjectService;
 import fr.cyu.data.project.Status;
@@ -35,6 +38,9 @@ public class ProjectController {
 
     @Autowired
     private EmployeeService es;
+
+    @Autowired
+    private SessionService ss;
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAll() {
@@ -58,6 +64,11 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
+
+        if (!ss.isAuthorized(dto, Permission.CREATE_PROJECT)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         boolean res = ps.add(dto.getName(), Status.fromValue(dto.getStatus()),
                 new HashSet<Employee>(es.employeeFromIds(dto.getEmployees())))
                 .isPresent();
@@ -70,6 +81,11 @@ public class ProjectController {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
+
+        if (!ss.isAuthorized(dto, Permission.EDIT_PROJECT)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         Project p = ps.getById(id).orElse(null);
         if (p == null) {
             return JSONUtil.NOT_FOUND_ERROR;
@@ -83,10 +99,16 @@ public class ProjectController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteProject(@PathVariable("id") Integer id) {
-        if (id == null || id <= 0) {
+    public ResponseEntity<String> deleteProject(@PathVariable("id") Integer id, @Valid @RequestBody SessionDTO dto,
+            BindingResult bindingResult) {
+        if (id == null || id <= 0 || bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
+
+        if (!ss.isAuthorized(dto, Permission.DELETE_PROJECT)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         boolean res = ps.deleteById(id);
 
         return res ? JSONUtil.OK : JSONUtil.NOT_FOUND_ERROR;

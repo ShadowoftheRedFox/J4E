@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class NewProjectDTO {
+public class NewProjectDTO extends SessionDTO {
     @NotNull
     @NotEmpty
     @Size(min = 3, max = 50)

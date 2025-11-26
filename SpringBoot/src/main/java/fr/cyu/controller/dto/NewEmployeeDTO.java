@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class NewEmployeeDTO {
+public class NewEmployeeDTO extends SessionDTO {
     @NotBlank
     @Size(min = 3, max = 50)
     private String username;

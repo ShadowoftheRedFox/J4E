@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.cyu.controller.dto.NewDepartmentDTO;
+import fr.cyu.controller.dto.SessionDTO;
+import fr.cyu.data.SessionService;
 import fr.cyu.data.department.Department;
 import fr.cyu.data.department.DepartmentService;
 import fr.cyu.data.employee.EmployeeService;
+import fr.cyu.data.employee.Permission;
 import fr.cyu.utils.JSONUtil;
 import jakarta.validation.Valid;
 
@@ -32,6 +35,9 @@ public class DepartmentController {
 
     @Autowired
     private EmployeeService es;
+
+    @Autowired
+    private SessionService ss;
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAll() {
@@ -55,6 +61,11 @@ public class DepartmentController {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
+
+        if (!ss.isAuthorized(dto, Permission.CREATE_DEPARTMENT)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         return ds.add(dto.getName(), es.employeeFromIds(dto.getEmployees())).isPresent() ? JSONUtil.OK
                 : JSONUtil.BAD_REQUEST_ERROR;
     }
@@ -65,6 +76,10 @@ public class DepartmentController {
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        if (!ss.isAuthorized(dto, Permission.EDIT_DEPARTMENT)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
         }
 
         Department d = ds.getById(id).orElse(null);
@@ -79,9 +94,14 @@ public class DepartmentController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteDepartment(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> deleteDepartment(@PathVariable("id") Integer id,
+            @Valid @RequestBody SessionDTO dto, BindingResult bindingResult) {
         if (id == null || id <= 0) {
             return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        if (!ss.isAuthorized(dto, Permission.DELETE_DEPARTMENT)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
         }
 
         return ds.deleteById(id) ? JSONUtil.OK : JSONUtil.NOT_FOUND_ERROR;

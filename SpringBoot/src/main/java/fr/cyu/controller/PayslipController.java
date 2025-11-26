@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.cyu.controller.dto.NewPayslipDTO;
+import fr.cyu.controller.dto.SessionDTO;
+import fr.cyu.data.SessionService;
 import fr.cyu.data.employee.EmployeeService;
+import fr.cyu.data.employee.Permission;
 import fr.cyu.data.payslip.Payslip;
 import fr.cyu.data.payslip.PayslipService;
 import fr.cyu.utils.JSONUtil;
@@ -33,16 +36,37 @@ public class PayslipController {
     @Autowired
     private EmployeeService es;
 
+    @Autowired
+    private SessionService ss;
+
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getAll() {
-        return JSONUtil.stringify(ps.getAll());
+    public ResponseEntity<String> getAll(@Valid @RequestBody SessionDTO dto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        if (!ss.isAuthorized(dto, Permission.VIEW_PAYSLIP)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
+        return ResponseEntity.ok(JSONUtil.stringify(ps.getAll()));
     }
 
     @GetMapping(value = "/employee/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getAllOfEmployee(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> getAllOfEmployee(@PathVariable("id") Integer id, @Valid @RequestBody SessionDTO dto,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        if (!ss.isAuthorized(dto, Permission.VIEW_PAYSLIP)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         if (id <= 0) {
             return JSONUtil.NOT_FOUND_ERROR;
         }
+
         if (es.getById(id).isEmpty()) {
             return JSONUtil.NOT_FOUND_ERROR;
         }
@@ -56,6 +80,10 @@ public class PayslipController {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
 
+        if (!ss.isAuthorized(dto, Permission.VIEW_PAYSLIP)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         boolean res = ps.add(es.getById(dto.getEmployee()).orElse(null), dto.getHour(), dto.getWage(), dto.getBonus(),
                 dto.getMalus(), dto.getDate()).isPresent();
 
@@ -63,19 +91,38 @@ public class PayslipController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> get(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> get(@PathVariable("id") Integer id, @Valid @RequestBody NewPayslipDTO dto,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        if (!ss.isAuthorized(dto, Permission.VIEW_PAYSLIP)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         if (id <= 0) {
             return JSONUtil.NOT_FOUND_ERROR;
         }
-        Optional<Payslip> e = ps.getById(id);
-        if (e.isEmpty()) {
+
+        Optional<Payslip> p = ps.getById(id);
+        if (p.isEmpty()) {
             return JSONUtil.NOT_FOUND_ERROR;
         }
-        return ResponseEntity.ok(JSONUtil.stringify(e.get()));
+        return ResponseEntity.ok(JSONUtil.stringify(p.get()));
     }
 
     @GetMapping(value = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public Object getPdf(@PathVariable("id") Integer id) {
+    public Object getPdf(@PathVariable("id") Integer id, @Valid @RequestBody NewPayslipDTO dto,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        if (!ss.isAuthorized(dto, Permission.VIEW_PAYSLIP)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         if (id <= 0) {
             return JSONUtil.NOT_FOUND_ERROR;
         }
@@ -94,6 +141,10 @@ public class PayslipController {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
 
+        if (!ss.isAuthorized(dto, Permission.VIEW_PAYSLIP)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         Payslip p = ps.getById(id).orElse(null);
         if (p == null) {
             return JSONUtil.NOT_FOUND_ERROR;
@@ -109,7 +160,16 @@ public class PayslipController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> deletePayslip(@PathVariable("id") Integer id, @Valid @RequestBody NewPayslipDTO dto,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return JSONUtil.BAD_REQUEST_ERROR;
+        }
+
+        if (!ss.isAuthorized(dto, Permission.VIEW_PAYSLIP)) {
+            return JSONUtil.UNAUTHORIZED_ERROR;
+        }
+
         if (id == null || id <= 0) {
             return JSONUtil.BAD_REQUEST_ERROR;
         }
