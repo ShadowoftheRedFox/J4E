@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { BaseResponse, Department, Employee, Payslip, Project } from '../models/APIModels';
+import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 const ApiUrl = environment.API_URL + ":" + environment.API_PORT + "/";
 
@@ -10,6 +12,7 @@ const ApiUrl = environment.API_URL + ":" + environment.API_PORT + "/";
 })
 export class ApiService {
     readonly http = inject(HttpClient);
+    readonly authService = inject(AuthService);
 
     readonly auth = {
         connect: (username: string, password: string) => {
@@ -132,12 +135,17 @@ export class ApiService {
     private sendApiRequest<T>(
         method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
         endpoint: string,
-        parameters: object = {},
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        parameters: any = {},
         message?: string,
-    ) {
-        const urlParameters = parameters != undefined && Object.keys(parameters).length > 0
-            ? "?data=" + JSON.stringify(parameters)
-            : "";
+    ): Observable<T> {
+        // add the connected user as "session_id"
+        parameters["session_id"] = this.authService.user?.id || 0;
+
+        let urlParameters = "";
+        if (parameters != undefined && Object.keys(parameters).length > 0) {
+            urlParameters = "?" + Object.entries(parameters).flatMap(v => v[0] + "=" + v[1]).join("&");
+        }
 
         if (message !== undefined && message != null && message.length > 0) {
             console.info("[API] " + message);
@@ -153,7 +161,7 @@ export class ApiService {
             case "PATCH":
                 return this.http.patch<T>(ApiUrl + endpoint, parameters);
             case "DELETE":
-                return this.http.delete<T>(ApiUrl + endpoint, parameters);
+                return this.http.delete<T>(ApiUrl + endpoint, parameters) as Observable<T>;
         }
     }
 }

@@ -68,7 +68,7 @@ export class EmployeeComponent implements AfterViewInit {
     readonly displayedColumns: Columns[] = ['id', 'username', 'firstName', 'lastName', 'ranks', 'department', 'project', 'action'];
 
     private readonly api = inject(ApiService);
-    private readonly auth = inject(AuthService);
+    readonly auth = inject(AuthService);
     private readonly popup = inject(PopupService);
     readonly dialog = inject(MatDialog);
 

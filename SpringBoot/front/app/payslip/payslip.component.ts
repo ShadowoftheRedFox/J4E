@@ -11,8 +11,6 @@ import { MatSortModule } from "@angular/material/sort"
 import { MatMenuModule } from "@angular/material/menu"
 import { MatInputModule } from "@angular/material/input"
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { PopupService } from '../../services/popup.service';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -65,9 +63,7 @@ export class PayslipComponent implements AfterViewInit {
     readonly displayedColumns: Columns[] = ['id', 'username', 'firstName', 'lastName', 'action'];
 
     private readonly api = inject(ApiService);
-    private readonly auth = inject(AuthService);
-    private readonly popup = inject(PopupService);
-    private readonly dialog = inject(MatDialog);
+    readonly auth = inject(AuthService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
 

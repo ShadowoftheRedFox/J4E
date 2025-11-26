@@ -73,7 +73,7 @@ export class AuthComponent implements AfterViewInit {
     submitForm() {
         if (this.formGroup.invalid) return;
 
-        this.api.auth.connect(this.formGroup.value.username as string, this.formGroup.value.password as string).subscribe({
+        this.api.auth.connect(this.formGroup.value.username || "", this.formGroup.value.password || "").subscribe({
             next: (user) => {
                 this.auth.connect(user);
                 this.router.navigate([""]);
@@ -82,6 +82,6 @@ export class AuthComponent implements AfterViewInit {
                 console.error(err);
                 this.formGroup.setErrors({ failed: true });
             }
-        })
+        });
     }
 }

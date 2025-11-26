@@ -4,8 +4,12 @@
         <a routerLink="/employees">Employés</a>
         <a routerLink="/departments">Départements</a>
         <a routerLink="/projects">Projets</a>
+        @if (auth.hasPerm("VIEW_PAYSLIP")) {
         <a routerLink="/payslips">Paies</a>
+        }
+        @if (auth.hasPerm("VIEW_REPORT")) {
         <a routerLink="/report">Rapport</a>
+        }
     </div>
     @if (isAuth) {
     <button (click)="disconnect()">{{getFirstLastNames()}} - Déconnexion</button>

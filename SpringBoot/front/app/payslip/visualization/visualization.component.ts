@@ -12,6 +12,7 @@ import { DialogComponent, DialogDataType } from '../../../shared/dialog/dialog.c
 import { PayslipFormComponent } from '../payslip-form/payslip-form.component';
 import { PopupService } from '../../../services/popup.service';
 import { PayslipItemComponent } from "./payslip-item/payslip-item.component";
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
     selector: 'app-visualization',
@@ -34,6 +35,7 @@ export class VisualizationComponent {
     private readonly popup = inject(PopupService);
     private readonly dialog = inject(MatDialog);
     private readonly ref = inject(ChangeDetectorRef);
+    readonly auth = inject(AuthService);
 
     employee_id = signal(0);
     employee: Employee | null = null;

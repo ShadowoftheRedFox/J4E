@@ -1,14 +1,11 @@
-import { inject, Injectable } from '@angular/core';
-import { ApiService } from './api.service';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Employee } from '../models/APIModels';
+import { Employee, EmployeePermission } from '../models/APIModels';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    api = inject(ApiService);
-
     isAuth = new Subject<boolean>();
     user: Employee | null = null;
 
@@ -20,5 +17,18 @@ export class AuthService {
     connect(employee: Employee) {
         this.user = employee;
         this.isAuth.next(true);
+    }
+
+    hasPerm(perm: EmployeePermission | EmployeePermission[]) {
+        if (!this.isAuth || this.user == null) { return false; }
+        if (Array.isArray(perm)) {
+            let all = true;
+            perm.forEach(p => {
+                all = all && this.user!.permissions.includes(p);
+            });
+            return all;
+        } else {
+            return this.user.permissions.includes(perm);
+        }
     }
 }

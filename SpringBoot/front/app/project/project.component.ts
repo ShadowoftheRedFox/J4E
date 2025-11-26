@@ -16,6 +16,7 @@ import { PopupService } from '../../services/popup.service';
 import { DialogComponent, DialogDataType } from '../../shared/dialog/dialog.component';
 import { ProjectFormComponent } from './project-form/project-form.component';
 import { EmployeeSelectionDataType, SelectEmployeesComponent } from '../employee/select-employees/select-employees.component';
+import { AuthService } from '../../services/auth.service';
 
 
 type Columns = "id" | "name" | "status" | "employees" | "action";
@@ -68,6 +69,7 @@ export class ProjectComponent implements AfterViewInit {
     private readonly api = inject(ApiService);
     private readonly popup = inject(PopupService);
     private readonly dialog = inject(MatDialog);
+    readonly auth = inject(AuthService);
 
     allProjects: Project[] = [];
     sortedProjects: Project[] = [];

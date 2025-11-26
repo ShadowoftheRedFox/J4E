@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
     styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-    private auth = inject(AuthService);
+    readonly auth = inject(AuthService);
 
     isAuth = false;
 

@@ -1,4 +1,6 @@
-@if (employee_id() === 0) {
+@if (!auth.hasPerm('VIEW_PAYSLIP')) {
+<p>Vous n'avez pas les permissions suffisantes pour voir les feuilles de paies.</p>
+} @else if (employee_id() === 0) {
 <p>Chargement...</p>
 } @else if (employee_id() === -1) {
 <p>Employé inconnu. <a routerLink="../">Retour à la liste des employés.</a></p>

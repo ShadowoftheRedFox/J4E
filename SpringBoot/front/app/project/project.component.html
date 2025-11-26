@@ -1,5 +1,5 @@
 <div class="mb-4">
-    <button mat-flat-button (click)="add()">Ajouter un projet</button>
+    <button mat-flat-button (click)="add()" [disabled]="!auth.hasPerm('CREATE_PROJECT')">Ajouter un projet</button>
 </div>
 <div class="h-full relative">
     <mat-form-field class="w-full">
@@ -36,8 +36,10 @@
                     <mat-menu #menu>
                         <button mat-menu-item (click)="editEmployees(element.id)"><mat-icon>add</mat-icon>Modifier les
                             employés</button>
-                        <button mat-menu-item (click)="edit(element.id)"><mat-icon>edit</mat-icon> Modifier</button>
-                        <button mat-menu-item (click)="delete(element.id)"><mat-icon>delete</mat-icon> Effacer</button>
+                        <button mat-menu-item (click)="edit(element.id)"
+                            [disabled]="!auth.hasPerm('EDIT_PROJECT')"><mat-icon>edit</mat-icon> Modifier</button>
+                        <button mat-menu-item (click)="delete(element.id)"
+                            [disabled]="!auth.hasPerm('DELETE_PROJECT')"><mat-icon>delete</mat-icon> Effacer</button>
                     </mat-menu>
                 </td>
             </ng-container>

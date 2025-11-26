@@ -1,3 +1,6 @@
+@if (!auth.hasPerm('VIEW_REPORT')) {
+<p>Vous n'avez pas les permissions suffisantes pour voir les feuilles de paies.</p>
+} @else {
 <div>
     <h1>Employés:</h1>
     <p>Nombre d'employés: {{employees.length}}</p>
@@ -34,3 +37,4 @@
         }
     </div>
 </div>
+}

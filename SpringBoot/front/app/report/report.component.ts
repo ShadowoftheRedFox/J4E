@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ReportComponent {
     private readonly api = inject(ApiService);
-    private readonly auth = inject(AuthService);
+    readonly auth = inject(AuthService);
 
     departments: Department[] = [];
     employees: Employee[] = [];

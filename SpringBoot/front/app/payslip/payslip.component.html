@@ -1,3 +1,6 @@
+@if (!auth.hasPerm('VIEW_PAYSLIP')) {
+<p>Vous n'avez pas les permissions suffisantes pour voir les feuilles de paies.</p>
+} @else {
 <div class="h-full relative">
     <mat-form-field class="w-full">
         <mat-label>Filtrer</mat-label>
@@ -44,3 +47,4 @@
         </mat-paginator>
     </div>
 </div>
+}

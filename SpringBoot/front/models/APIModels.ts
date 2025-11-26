@@ -19,18 +19,23 @@ export const EmployeePermission = [
     "EDIT_USER",
     "CREATE_USER",
     "DELETE_USER",
+
     "EDIT_PROJECT",
     "CREATE_PROJECT",
     "DELETE_PROJECT",
+
     "EDIT_DEPARTMENT",
     "CREATE_DEPARTMENT",
     "DELETE_DEPARTMENT",
+
     "EDIT_RANK",
     "CREATE_RANK",
     "DELETE_RANK",
+
     "EDIT_PERMISSION",
     "CREATE_PERMISSION",
     "DELETE_PERMISSION",
+
     "VIEW_REPORT",
     "VIEW_PAYSLIP"
 ] as const;
