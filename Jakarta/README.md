@@ -2,11 +2,6 @@
 
 Partie du projet fait avec Jakarta.
 
-## Sommaire
-- [JEE: Jakarta](#jee-jakarta)
-  - [Sommaire](#sommaire)
-  - [Base de données](#base-de-données)
-
 ## Base de données
 
 Il est nécéssaire de créer une database "jee" et un utilisateur "jee":
@@ -15,54 +10,34 @@ CREATE DATABASE 'jee';
 CREATE USER 'jee'@'jee' IDENTIFIED BY 'jee';
 GRANT ALL PRIVILEGES ON jee.* TO 'jee'@'localhost';
 ```
+## Nécéssités
 
-Table:
-```sql
-CREATE TABLE rank (
-    id INT NOT NULL AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    description VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT fk_rank_user FOREIGN KEY (user_id) REFERENCES user(id)
-);
+- Maven
+- Tomcat server v10+
 
-CREATE TABLE user (
-    id int not null,
-    firstname varchar(50) NOT NULL,
-    lastname varchar(50) NOT NULL,
+## Lancer le projet 
 
-    PRIMARY KEY ("id")
-);
+### À la main
 
-CREATE TABLE department (
-    id INT  PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE project (
-    id INT  PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    status ENUM('ongoing', 'completed', 'canceled') NOT NULL
-);
-
-CREATE TABLE payslip (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    hour DECIMAL(5,2) NOT NULL,
-    wage DECIMAL(10,2) NOT NULL,
-    bonus DECIMAL(10,2) DEFAULT 0,
-    malus DECIMAL(10,2) DEFAULT 0,
-    payment_date DATE NOT NULL,
-    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user(id)
-);
+Il suffit de compiler:
+```sh
+mvn package
 ```
+Puis de lancer le fichier [target/jee-ing2-gsi3-jakarta.war](./target/jee-ing2-gsi3-jakarta.war) avec tomcat.
 
-- rank (#id, description)
-- user (#id, firstname, lastname)
-- department (#id, name)
-- project (#id, name, status(**ENUM**))
-- payslip (#id, user_id, hour, wage, bonus, malus, date)
+À chaque modification il faut refaire cette manipulation.
 
-- user_rank (#id, user_id, rank_id)
-- user_department (#id, department_id, user_id, role(**ENUM**))
-- user_project (#id, project_id, user_id, role(**ENUM**))
+### Avec IntelliJ Ultimate
+
+Ouvrez le projet dans IJ Ultimate.  
+Allez dans la structure du projet.
+- Dans **Project Settings->Project**, sélectionnez **SDK** en `25`, ou installez `Oracle OpenJDK 25`.
+- Dans **Project Settings->facets**:
+  - Ajoutez une nouvelle facette `Hibernate`, avec une référence vers [/src/main/resources/hibernate.cfg.xml](./src/main/resources/hibernate.cfg.xml).
+  - Ajoutez une nouvelle facette `web`, avec une référence vers [/src/main/webapp/WEB-INF/web.xml](./src/main/webapp/WEB-INF/web.xml). Ajoutez dans **Web Resource Directories** le dossier [/src/main/webapp](./src/main/webapp/). Dans **Source Roots**, cochez tout.
+- Dans **Project Settings->Modules**, ajoutez un nouveau module nommé `jee`:
+  - Ajoutez un module `web`. Dans **Deployment descriptors**, ajouter l'option `web.xml` qui devrait être proposé.
+  - Ajoutez un module `Hibernate`, qui devrait correspondre à ce que vous avez remplis dans **facets**.
+- Dans **project Settings->Artifacts**, ajoutez un nouvel artéfact `Web Application: Exploded > From modules` et sélectionnez le module `jee`. Nommez l'artéfact `jee:war exploded`.
+
+Allez dans configuration **Run/Debug**, et ajoutez l'option `Tomcat Server`. Précisez votre dossier Tomcat. Notez l'URL dans la catégorie **Open browser**, ou mettez `http://localhost:8080/jee_war_exploded`. **JRE** en `Default`. **HTTP port** en `8080` et **JMX port** en `1099`. Dans **Before launch**, ajoutez un `Build`, puis ajoutez un `Build artifact` et sélectionnez `jee:war exploded`.  
