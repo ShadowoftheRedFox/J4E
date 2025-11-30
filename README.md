@@ -7,4 +7,4 @@ Le dossier [SpringBoot](./SpringBoot/) contient le projet avec SpringBoot et Ang
 
 Chaque dossier contient in README expliquant comment lancer les projets.  
 
-Le [rapport](./Rapport.pdf) se trouve dans la racine du dossier.  
+Le [rapport](./rapport.pdf) se trouve dans la racine du dossier.  
