@@ -66,6 +66,13 @@
     </div>
     <div>
         <h1>Employés</h1>
+        <div>
+            <form class="inline-form" method="post" action="${pageContext.request.contextPath}/employee/filter">
+                <label for="filter_four">Filtrer par employés dans 4 projets ou plus</label>
+                <input id="filter_four" type="checkbox" name="filter_four">
+                <button type="submit">Filtrer</button>
+            </form>
+        </div>
         <table>
             <caption>
                 Liste des employés (<%= ((List<User>) request.getAttribute("users")).size()%>)
