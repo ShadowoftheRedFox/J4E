@@ -94,7 +94,7 @@ export class ApiService {
             return this.sendApiRequest<BaseResponse>("DELETE", "payslip/" + id, {}, "Deleting payslip " + id);
         },
         raw_pdf: (id: number) => {
-            return this.http.get(ApiUrl + "payslip/" + id + "/pdf", {
+            return this.http.get(ApiUrl + "payslip/" + id + "/pdf?session_id="+(this.authService.user?.id || 0), {
                 responseType: 'arraybuffer',
                 headers: new HttpHeaders().append('Content-Type', 'application/pdf'),
             });
@@ -161,7 +161,7 @@ export class ApiService {
             case "PATCH":
                 return this.http.patch<T>(ApiUrl + endpoint, parameters);
             case "DELETE":
-                return this.http.delete<T>(ApiUrl + endpoint, parameters) as Observable<T>;
+                return this.http.delete<T>(ApiUrl + endpoint + urlParameters, parameters) as Observable<T>;
         }
     }
 }
